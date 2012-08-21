@@ -1,0 +1,32 @@
+{
+  "name": "grunt-bump",
+  "description": "Bump package version",
+  "version": "0.0.1",
+  "homepage": "https://github.com/vojtajina/grunt-bump",
+  "author": {
+    "name": "Vojta Jína",
+    "email": "vojta.jina@gmail.com"
+  },
+  "contributors": [],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/vojtajina/grunt-bump.git"
+  },
+  "bugs": {
+    "url": "https://github.com/vojtajina/grunt-bump/issues"
+  },
+  "main": "grunt.js",
+  "engines": {
+    "node": "*"
+  },
+  "scripts": {
+    "test": "grunt test"
+  },
+  "dependencies": {
+    "grunt": ">= 0.3.8"
+  },
+  "devDependencies": {},
+  "keywords": [
+    "gruntplugin"
+  ]
+}
