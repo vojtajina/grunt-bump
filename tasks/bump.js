@@ -8,6 +8,7 @@
  *
  * @author Vojta Jina <vojta.jina@gmail.com>
  */
+var bumpVersion = require("./bump/index.js");
 
 module.exports = function(grunt) {
   grunt.registerTask('bump', 'Increment the version number.', function(versionType) {
@@ -15,27 +16,9 @@ module.exports = function(grunt) {
     var package = grunt.file.readJSON(PACKAGE_FILE);
 
     // compute the new version
-    package.version = grunt.helper('bump_version', package.version, versionType || 'patch');
+    package.version = bumpVersion(package.version, versionType || 'patch');
 
     grunt.file.write(PACKAGE_FILE, JSON.stringify(package, null, '  '));
     grunt.log.ok('Version bumped to ' + package.version);
-  });
-
-
-  grunt.registerHelper('bump_version', function(version, versionType) {
-    var type = {
-      patch: 2,
-      minor: 1,
-      major: 0
-    };
-
-    var parts = version.split('.');
-    var idx = type[versionType || 'patch'];
-
-    parts[idx] = parseInt(parts[idx], 10) + 1;
-    while(++idx < parts.length) {
-      parts[idx] = 0;
-    }
-    return parts.join('.');
   });
 };

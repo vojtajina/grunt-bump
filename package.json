@@ -24,7 +24,8 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "grunt": ">= 0.3.8"
+    "grunt-contrib-nodeunit": "~0.1.1",
+    "grunt": "~0.4.0rc4"
   },
   "keywords": [
     "gruntplugin"
