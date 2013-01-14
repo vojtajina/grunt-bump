@@ -7,18 +7,25 @@
  * grunt bump:major
  *
  * @author Vojta Jina <vojta.jina@gmail.com>
+ * @author Mathias Paumgarten <mail@mathias-paumgarten.com>
  */
 
 module.exports = function(grunt) {
   grunt.registerTask('bump', 'Increment the version number.', function(versionType) {
     var PACKAGE_FILE = 'package.json';
     var package = grunt.file.readJSON(PACKAGE_FILE);
+    var file = grunt.file.read( PACKAGE_FILE );
 
     // compute the new version
-    package.version = grunt.helper('bump_version', package.version, versionType || 'patch');
+    var version = grunt.helper('bump_version', package.version, versionType || 'patch');
 
-    grunt.file.write(PACKAGE_FILE, JSON.stringify(package, null, '  '));
-    grunt.log.ok('Version bumped to ' + package.version);
+    var file = file.replace( /([\'|\"]version[\'|\"]:[ ]*[\'|\"])([\d|.]*)([\'|\"])/i, function( match, left, center, right ) {
+      return left + version + right;
+    } );
+
+    grunt.file.write( PACKAGE_FILE, file );
+
+    grunt.log.ok('Version bumped to ' + version);
   });
 
 
