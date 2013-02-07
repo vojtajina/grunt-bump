@@ -23,6 +23,9 @@
     "test": "grunt test"
   },
   "dependencies": {},
+  "peerDependencies": {
+    "grunt": "~0.4.0rc4"
+  },
   "devDependencies": {
     "grunt-contrib-nodeunit": "~0.1.1",
     "grunt": "~0.4.0rc4"
