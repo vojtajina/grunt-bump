@@ -1,7 +1,7 @@
 {
   "name": "grunt-bump",
   "description": "Bump package version",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "homepage": "https://github.com/vojtajina/grunt-bump",
   "author": {
     "name": "Vojta Jína",
@@ -17,14 +17,18 @@
   },
   "main": "grunt.js",
   "engines": {
-    "node": "*"
+    "node": ">= 0.8.0"
   },
   "scripts": {
     "test": "grunt test"
   },
   "dependencies": {},
+  "peerDependencies": {
+    "grunt": "~0.4.0rc4"
+  },
   "devDependencies": {
-    "grunt": ">= 0.3.8"
+    "grunt-contrib-nodeunit": "~0.1.1",
+    "grunt": "~0.4.0rc4"
   },
   "keywords": [
     "gruntplugin"
