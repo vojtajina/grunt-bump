@@ -4,7 +4,7 @@ module.exports = function(grunt) {
   grunt.initConfig({
     nodeunit: {
       bump: ['test/*.spec.js']
-    },
+    }
   });
 
   // Load local tasks.
