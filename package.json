@@ -29,7 +29,6 @@
     "grunt": "~0.4"
   },
   "devDependencies": {
-    "grunt-contrib-nodeunit": "~0.1.1",
     "grunt": "~0.4"
   },
   "keywords": [
