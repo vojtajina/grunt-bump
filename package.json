@@ -22,7 +22,9 @@
   "scripts": {
     "test": "grunt test"
   },
-  "dependencies": {},
+  "dependencies": {
+    "semver": "~1.1.4"
+  },
   "peerDependencies": {
     "grunt": "~0.4"
   },

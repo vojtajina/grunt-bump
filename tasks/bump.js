@@ -5,11 +5,12 @@
  * grunt bump:patch
  * grunt bump:minor
  * grunt bump:major
+ * grunt bump:build
  *
  * @author Vojta Jina <vojta.jina@gmail.com>
  * @author Mathias Paumgarten <mail@mathias-paumgarten.com>
  */
-var bumpVersion = require("./bump/index.js");
+var semver = require("semver");
 
 module.exports = function(grunt) {
   grunt.registerTask('bump', 'Increment the version number.', function(versionType) {
@@ -18,7 +19,7 @@ module.exports = function(grunt) {
     var version;
 
     var file = file.replace(/([\'|\"]version[\'|\"][ ]*:[ ]*[\'|\"])([\d|.]*)([\'|\"])/i, function(match, left, center, right) {
-      version = bumpVersion(center, versionType || 'patch');
+      version = semver.inc(center, versionType || 'patch');
 
       return left + version + right;
     } );
