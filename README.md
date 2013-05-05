@@ -34,3 +34,19 @@ grunt bump
 grunt bump:major
 >> Version bumped to 1.0.0
 ````
+
+Let's say current version is `0.0.3-rc2.1+build.87`.
+
+````
+grunt bump:build
+>> Version bumped to 0.0.3-rc2.1+build.88
+
+grunt bump:pre
+>> Version bumped to 0.0.3-rc2.2
+
+grunt bump:build
+>> Version bumped to 0.0.3-rc2.2+build.1
+
+grunt bump:release
+>> Version bumped to 0.0.3
+````
