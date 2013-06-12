@@ -9,22 +9,28 @@
  * @author Vojta Jina <vojta.jina@gmail.com>
  * @author Mathias Paumgarten <mail@mathias-paumgarten.com>
  */
-var bumpVersion = require("./bump/index.js");
+var bumpVersion = require('./bump/index.js');
 
 module.exports = function(grunt) {
   grunt.registerTask('bump', 'Increment the version number.', function(versionType) {
-    var PACKAGE_FILE = 'package.json';
-    var file = grunt.file.read(PACKAGE_FILE);
-    var version;
+    var options = this.options({
+      'files': ['package.json']
+    });
 
-    var file = file.replace(/([\'|\"]version[\'|\"][ ]*:[ ]*[\'|\"])([\d|.]*)([\'|\"])/i, function(match, left, center, right) {
-      version = bumpVersion(center, versionType || 'patch');
+    options.files.forEach(function(fileName) {
+      var PACKAGE_FILE = fileName;
+      var file = grunt.file.read(PACKAGE_FILE);
+      var version;
 
-      return left + version + right;
-    } );
+      file = file.replace(/([\'|\"]version[\'|\"][ ]*:[ ]*[\'|\"])([\d|.]*)([\'|\"])/i, function(match, left, center, right) {
+        version = bumpVersion(center, versionType || 'patch');
 
-    grunt.file.write(PACKAGE_FILE, file);
-    grunt.log.ok('Version bumped to ' + version);
+        return left + version + right;
+      });
+
+      grunt.file.write(PACKAGE_FILE, file);
+      grunt.log.ok('Version of ' + fileName + ' bumped to ' + version);
+    });
   });
 };
 

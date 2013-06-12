@@ -14,6 +14,25 @@ Add this line to your project's `grunt.js`:
     grunt.loadNpmTasks('grunt-bump');
 
 
+## Configuration
+
+By default, bump will bump your `package.json` file. If you would like to bump a different file, or multiple files at the same time, you may configure bump to do so:
+
+```javascript
+module.exports = function (grunt) {
+   grunt.initConfig({
+      bump: {
+          options: {
+              files: [
+                  'package.json',
+                  'bower.json'
+              ]
+          }
+      }
+   });
+}
+```
+
 ## Usage
 
 Let's say current version is `0.0.1`.
