@@ -34,3 +34,33 @@ grunt bump
 grunt bump:major
 >> Version bumped to 1.0.0
 ````
+
+## Task configs
+
+```js
+bump: {
+  package_file: 'package.json',
+  update_config_name: 'pkg'
+}
+```
+
+### Options
+
+#### package_file (Optional)
+
+Default: ```package.json```
+
+Will update this file with the new version number. Probably shouldn't need to be changed.
+
+#### update_config_name (Optional)
+
+Default: ```pkg```
+
+Will update this config with the new version number.
+ex: if your Gruntfile.js looks like
+
+    grunt.initConfig({
+        pkg: grunt.file.readJSON('package.json')
+    });
+
+It will update 'pkg' after version is bumped.
