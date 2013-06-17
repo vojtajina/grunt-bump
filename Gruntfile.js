@@ -1,8 +1,13 @@
 module.exports = function(grunt) {
 
-  // Project configuration.
   grunt.initConfig({});
-
-  // Load local tasks.
   grunt.loadTasks('tasks');
+  grunt.loadNpmTasks('grunt-npm');
+
+  grunt.registerTask('release', 'Bump version, push to NPM.', function(type) {
+    grunt.task.run([
+      'bump:' + (type || 'patch'),
+      'npm-publish'
+    ]);
+  });
 };
