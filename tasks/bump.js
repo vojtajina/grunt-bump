@@ -9,7 +9,7 @@
  * @author Vojta Jina <vojta.jina@gmail.com>
  * @author Mathias Paumgarten <mail@mathias-paumgarten.com>
  */
-var bumpVersion = require("./bump/index.js");
+var semver = require('semver');
 var exec = require('child_process').exec;
 
 module.exports = function(grunt) {
@@ -49,7 +49,7 @@ module.exports = function(grunt) {
     opts.files.forEach(function(file, idx) {
       var version = null;
       var content = grunt.file.read(file).replace(VERSION_REGEXP, function(match, prefix, parsedVersion, suffix) {
-        version = bumpVersion(parsedVersion, versionType || 'patch');
+        version = semver.inc(parsedVersion, versionType || 'patch');
         return prefix + version + suffix;
       });
 

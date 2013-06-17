@@ -1,4 +1,3 @@
-[![build status](https://secure.travis-ci.org/vojtajina/grunt-bump.png)](http://travis-ci.org/vojtajina/grunt-bump)
 # grunt-bump
 
 **Bump package version.**
