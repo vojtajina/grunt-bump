@@ -18,11 +18,11 @@ module.exports = function(grunt) {
       files: ['package.json'],
       updateConfigs: [], // array of config properties to update (with files)
       commit: true,
-      commitMessage: 'Release v${version}',
+      commitMessage: 'Release v<%=version%>',
       commitFiles: ['package.json'], // '-a' for all files
       createTag: true,
-      tagName: 'v${version}',
-      tagMessage: 'Version ${version}',
+      tagName: 'v<%=version%>',
+      tagMessage: 'Version <%=version%>',
       push: true,
       pushTo: 'origin'
     });

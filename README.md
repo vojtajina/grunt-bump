@@ -40,11 +40,11 @@ bump: {
   files: ['package.json'],
   updateConfigs: [],
   commit: true,
-  commitMessage: 'Release v${version}',
+  commitMessage: 'Release v<%=version%>',
   commitFiles: ['package.json'], // '-a' for all files
   createTag: true,
-  tagName: 'v${version}',
-  tagMessage: 'Version ${version}',
+  tagName: 'v<%=version%>',
+  tagMessage: 'Version <%=version%>',
   push: true,
   pushTo: 'origin'
 }
@@ -76,10 +76,10 @@ An array of files that you wanna commit. You can use `['-a']` to commit all file
 Do you wanna create a tag ?
 
 ### tagName
-If so, this is the name of that tag.
+If so, this is the name of that tag (Lo-Dash template).
 
 ### tagMessage
-Yep, you guessed right, it's the message of that tag - description.
+Yep, you guessed right, it's the message of that tag - description (again, Lo-Dash template).
 
 ### push
 Do you wanna push all these changes ?
