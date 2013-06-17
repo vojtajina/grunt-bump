@@ -15,8 +15,8 @@ var exec = require('child_process').exec;
 module.exports = function(grunt) {
   grunt.registerTask('bump', 'Increment the version number.', function(versionType) {
     var opts = this.options({
-      package_file: 'package.json',
-      update_config_name: 'pkg',
+      files: ['package.json'],
+      updateConfigs: [], // array of config properties to update (with files)
       commit: true,
       commitMessage: 'Release v${version}',
       commitFiles: ['package.json'], // '-a' for all files
@@ -42,34 +42,51 @@ module.exports = function(grunt) {
       }
     };
 
+    var globalVersion; // when bumping multiple files
+    var VERSION_REGEXP = /([\'|\"]version[\'|\"][ ]*:[ ]*[\'|\"])([\d|.]*)([\'|\"])/i;
 
-    var file = grunt.file.read(opts.package_file);
-    var version;
+    // BUMP ALL FILES
+    opts.files.forEach(function(file, idx) {
+      var version = null;
+      var content = grunt.file.read(file).replace(VERSION_REGEXP, function(match, prefix, parsedVersion, suffix) {
+        version = bumpVersion(parsedVersion, versionType || 'patch');
+        return prefix + version + suffix;
+      });
 
-    file = file.replace(/([\'|\"]version[\'|\"][ ]*:[ ]*[\'|\"])([\d|.]*)([\'|\"])/i, function(match, left, center, right) {
-      version = bumpVersion(center, versionType || 'patch');
+      if (!version) {
+        grunt.fatal('Can not find a version to bump in ' + file);
+      }
 
-      return left + version + right;
-    } );
+      grunt.file.write(file, content);
+      grunt.log.ok('Version bumped to ' + version + (opts.files.length > 1 ? ' (in ' + file + ')' : ''));
 
-    if (!version) {
-      grunt.fatal('Can not find a version to bump');
-    }
+      if (!globalVersion) {
+        globalVersion = version;
+      } else if (globalVersion !== version) {
+        grunt.warn('Bumping multiple files with different versions!');
+      }
 
-    grunt.file.write(opts.package_file, file);
-    grunt.log.ok('Version bumped to ' + version);
-    var cfg = grunt.config(opts.update_config_name);
-    if (cfg && cfg.version !== undefined) {
+      var configProperty = opts.updateConfigs[idx];
+      if (!configProperty) {
+        return;
+      }
+
+      var cfg = grunt.config(configProperty);
+      if (!cfg) {
+        return grunt.warn('Can not update "' + configProperty + '" config, it does not exist!');
+      }
+
       cfg.version = version;
-      grunt.config(opts.update_config_name, cfg);
-      grunt.log.ok(opts.update_config_name + '\'s version has now been updated');
-    }
+      grunt.config(configProperty, cfg);
+      grunt.log.ok(configProperty + '\'s version updated');
+    });
+
 
     var template = grunt.util._.template;
 
     // COMMIT
     runIf(opts.commit, function() {
-      var commitMessage = template(opts.commitMessage, {version: version});
+      var commitMessage = template(opts.commitMessage, {version: globalVersion});
 
       exec('git commit ' + opts.commitFiles.join(' ') + ' -m "' + commitMessage + '"', function(err, stdout, stderr) {
         if (err) {
@@ -83,8 +100,8 @@ module.exports = function(grunt) {
 
     // CREATE TAG
     runIf(opts.createTag, function() {
-      var tagName = template(opts.tagName, {version: version});
-      var tagMessage = template(opts.tagMessage, {version: version});
+      var tagName = template(opts.tagName, {version: globalVersion});
+      var tagMessage = template(opts.tagMessage, {version: globalVersion});
 
       exec('git tag -a ' + tagName + ' -m "' + tagMessage + '"' , function(err, stdout, stderr) {
         if (err) {
