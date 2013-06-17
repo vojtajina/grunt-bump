@@ -40,11 +40,11 @@ bump: {
   files: ['package.json'],
   updateConfigs: [],
   commit: true,
-  commitMessage: 'Release v<%=version%>',
+  commitMessage: 'Release v%VERSION%',
   commitFiles: ['package.json'], // '-a' for all files
   createTag: true,
-  tagName: 'v<%=version%>',
-  tagMessage: 'Version <%=version%>',
+  tagName: 'v%VERSION%',
+  tagMessage: 'Version %VERSION%',
   push: true,
   pushTo: 'origin'
 }
@@ -67,7 +67,7 @@ bump: {
 Do you wanna commit the changes ?
 
 ### commitMessage
-If so, what is the commit message ? This can be [Lo-Dash template], available value is `version` which is the new version.
+If so, what is the commit message ? You can use `%VERSION%` which will get replaced with the new version.
 
 ### commitFiles
 An array of files that you wanna commit. You can use `['-a']` to commit all files.
@@ -76,16 +76,13 @@ An array of files that you wanna commit. You can use `['-a']` to commit all file
 Do you wanna create a tag ?
 
 ### tagName
-If so, this is the name of that tag (Lo-Dash template).
+If so, this is the name of that tag (`%VERSION%` placeholder is available).
 
 ### tagMessage
-Yep, you guessed right, it's the message of that tag - description (again, Lo-Dash template).
+Yep, you guessed right, it's the message of that tag - description (`%VERSION%` placeholder is available).
 
 ### push
 Do you wanna push all these changes ?
 
 ### pushTo
 If so, which remote branch would you like to push to ?
-
-
-[Lo-Dash template]: http://lodash.com/docs#template

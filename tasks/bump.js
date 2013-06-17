@@ -18,11 +18,11 @@ module.exports = function(grunt) {
       files: ['package.json'],
       updateConfigs: [], // array of config properties to update (with files)
       commit: true,
-      commitMessage: 'Release v<%=version%>',
+      commitMessage: 'Release v%VERSION%',
       commitFiles: ['package.json'], // '-a' for all files
       createTag: true,
-      tagName: 'v<%=version%>',
-      tagMessage: 'Version <%=version%>',
+      tagName: 'v%VERSION%',
+      tagMessage: 'Version %VERSION%',
       push: true,
       pushTo: 'origin'
     });
@@ -86,7 +86,7 @@ module.exports = function(grunt) {
 
     // COMMIT
     runIf(opts.commit, function() {
-      var commitMessage = template(opts.commitMessage, {version: globalVersion});
+      var commitMessage = opts.commitMessage.replace('%VERSION%', globalVersion);
 
       exec('git commit ' + opts.commitFiles.join(' ') + ' -m "' + commitMessage + '"', function(err, stdout, stderr) {
         if (err) {
@@ -100,8 +100,8 @@ module.exports = function(grunt) {
 
     // CREATE TAG
     runIf(opts.createTag, function() {
-      var tagName = template(opts.tagName, {version: globalVersion});
-      var tagMessage = template(opts.tagMessage, {version: globalVersion});
+      var tagName = opts.tagName.replace('%VERSION%', globalVersion);
+      var tagMessage = opts.tagMessage.replace('%VERSION%', globalVersion);
 
       exec('git tag -a ' + tagName + ' -m "' + tagMessage + '"' , function(err, stdout, stderr) {
         if (err) {
