@@ -107,7 +107,7 @@ module.exports = function(grunt) {
         if (err) {
           grunt.fatal('Can not create the tag:\n  ' + stderr);
         }
-        grunt.log.ok('Tag ' + tagName + ' created');
+        grunt.log.ok('Tagged as "' + tagName + '"');
         next();
       });
     });
