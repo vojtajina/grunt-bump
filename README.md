@@ -37,16 +37,18 @@ This shows all the available config options with their default values.
 
 ```js
 bump: {
-  files: ['package.json'],
-  updateConfigs: [],
-  commit: true,
-  commitMessage: 'Release v%VERSION%',
-  commitFiles: ['package.json'], // '-a' for all files
-  createTag: true,
-  tagName: 'v%VERSION%',
-  tagMessage: 'Version %VERSION%',
-  push: true,
-  pushTo: 'origin'
+  options: {
+    files: ['package.json'],
+    updateConfigs: [],
+    commit: true,
+    commitMessage: 'Release v%VERSION%',
+    commitFiles: ['package.json'], // '-a' for all files
+    createTag: true,
+    tagName: 'v%VERSION%',
+    tagMessage: 'Version %VERSION%',
+    push: true,
+    pushTo: 'origin'
+  }
 }
 ```
 
