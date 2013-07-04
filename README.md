@@ -18,16 +18,22 @@ Add this line to your project's `Gruntfile.js`:
 Let's say current version is `0.0.1`.
 
 ````
-grunt bump
+$ grunt bump
 >> Version bumped to 0.0.2
 >> Committed as "Release v0.0.2"
 >> Tagged as "v0.0.2"
 >> Pushed to origin
 
-grunt bump:patch
+$ grunt bump:patch
 >> Version bumped to 0.0.3
 >> Committed as "Release v0.0.2"
 >> Tagged as "v0.0.2"
+>> Pushed to origin
+
+$ grunt bump:git
+>> Version bumped to 0.0.1-1-ge96c
+>> Committed as "Release v0.0.1-1-ge96c"
+>> Tagged as "v0.0.1-1-ge96c"
 >> Pushed to origin
 ````
 
@@ -47,7 +53,8 @@ bump: {
     tagName: 'v%VERSION%',
     tagMessage: 'Version %VERSION%',
     push: true,
-    pushTo: 'origin'
+    pushTo: 'origin',
+    gitDescribeOptions: '--tags --always --abbrev=1 --dirty=-d' // options to use with '$ git describe'
   }
 }
 ```
