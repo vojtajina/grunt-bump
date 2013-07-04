@@ -26,7 +26,8 @@ module.exports = function(grunt) {
       tagName: 'v%VERSION%',
       tagMessage: 'Version %VERSION%',
       push: true,
-      pushTo: 'origin'
+      pushTo: 'origin',
+      gitDescribeOptions: '--tags --always --abbrev=1 --dirty=-d'
     });
 
     var template = grunt.util._.template;
@@ -51,7 +52,7 @@ module.exports = function(grunt) {
 
     // GET VERSION FROM GIT
     runIf(versionType === 'git', function(){
-      exec('git describe --tags --always --abbrev=1 --long --dirty=-d', function(err, stdout, stderr){
+      exec('git describe ' + opts.gitDescribeOptions, function(err, stdout, stderr){
         if (err) {
           grunt.fatal('Can not get a version number using `git describe`');
         }
