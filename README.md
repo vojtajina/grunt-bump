@@ -29,6 +29,12 @@ grunt bump:patch
 >> Committed as "Release v0.0.2"
 >> Tagged as "v0.0.2"
 >> Pushed to origin
+
+grunt bump:git
+>> Version bumped to 0.0.1-1-ge96c
+>> Committed as "Release v0.0.1-1-ge96c"
+>> Tagged as "v0.0.1-1-ge96c"
+>> Pushed to origin
 ````
 
 ## Configuration

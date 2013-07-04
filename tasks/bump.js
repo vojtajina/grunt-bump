@@ -2,12 +2,14 @@
  * Increase version number
  *
  * grunt bump
+ * grunt bump:git
  * grunt bump:patch
  * grunt bump:minor
  * grunt bump:major
  *
  * @author Vojta Jina <vojta.jina@gmail.com>
  * @author Mathias Paumgarten <mail@mathias-paumgarten.com>
+ * @author Adam Biggs <email@adambig.gs>
  */
 var semver = require('semver');
 var exec = require('child_process').exec;
@@ -27,6 +29,7 @@ module.exports = function(grunt) {
       pushTo: 'origin'
     });
 
+    var template = grunt.util._.template;
     var done = this.async();
     var queue = [];
     var next = function() {
@@ -45,7 +48,8 @@ module.exports = function(grunt) {
     var gitVersion;    // when bumping using `git describe`
     var VERSION_REGEXP = /([\'|\"]version[\'|\"][ ]*:[ ]*[\'|\"])([\d||A-a|.|-]*)([\'|\"])/i;
 
-    // Git describe version
+
+    // GET VERSION FROM GIT
     runIf(versionType === 'git', function(){
       exec('git describe --tags --always --abbrev=1 --long --dirty=-d', function(err, stdout, stderr){
         if (err) {
@@ -55,6 +59,7 @@ module.exports = function(grunt) {
         next();
       });
     });
+
 
     // BUMP ALL FILES
     queue.push(function(){
@@ -99,8 +104,6 @@ module.exports = function(grunt) {
       next();
     });
 
-
-    var template = grunt.util._.template;
 
     // COMMIT
     runIf(opts.commit, function() {
