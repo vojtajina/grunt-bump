@@ -7,7 +7,17 @@
     "name": "Vojta Jína",
     "email": "vojta.jina@gmail.com"
   },
-  "contributors": [],
+  "contributors": [
+    "Mathias Paumgarten <paumgarten@soapcreative.com>",
+    "adam j. sontag <ajpiano@ajpiano.com>",
+    "travis4all <travis4all@diamon.dz>",
+    "Snugug <snugug@gmail.com>",
+    "Gavin <gavin@kodekoan.com>",
+    "ylesaout <ylesaout@gmail.com>",
+    "Mathias Paumgarten <mail@mathias-paumgarten.com>",
+    "Mayhem <stepien.nicolas@gmail.com>",
+    "RobinQu <robinqu@gmail.com>"
+  ],
   "repository": {
     "type": "git",
     "url": "git://github.com/vojtajina/grunt-bump.git"
