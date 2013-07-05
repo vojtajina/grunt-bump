@@ -30,7 +30,8 @@
   },
   "devDependencies": {
     "grunt": "~0.4",
-    "grunt-npm": "~0.0.1"
+    "grunt-npm": "~0.0.1",
+    "grunt-auto-release": "~0.0.3"
   },
   "keywords": [
     "gruntplugin"
