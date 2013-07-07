@@ -15,7 +15,9 @@ var semver = require('semver');
 var exec = require('child_process').exec;
 
 module.exports = function(grunt) {
-  grunt.registerTask('bump', 'Increment the version number.', function(versionType) {
+
+  var DESC = 'Increment the version, commit, tag and push.';
+  grunt.registerTask('bump', DESC, function(versionType, incOrCommitOnly) {
     var opts = this.options({
       bumpVersion: true,
       files: ['package.json'],
@@ -31,16 +33,17 @@ module.exports = function(grunt) {
       gitDescribeOptions: '--tags --always --abbrev=1 --dirty=-d'
     });
 
-    if (grunt.option('bump-only')) {
-      grunt.verbose.writeln('Only incrementing the version (--bump-only set).');
+    if (incOrCommitOnly === 'bump-only') {
+      grunt.verbose.writeln('Only incrementing the version.');
 
       opts.commit = false;
       opts.createTag = false;
       opts.push = false;
     }
 
-    if (grunt.option('commit-only')) {
-      grunt.verbose.writeln('Only commiting/taggin/pushin (--commit-only set).');
+    if (incOrCommitOnly === 'commit-only') {
+      grunt.verbose.writeln('Only commiting/taggin/pushing.');
+
       opts.bumpVersion = false;
     }
 
@@ -157,5 +160,15 @@ module.exports = function(grunt) {
 
     next();
   });
+
+
+  // ALIASES
+  DESC = 'Increment the version only.';
+  grunt.registerTask('bump-only', DESC, function(versionType) {
+    grunt.task.run('bump:' + (versionType || '') + ':bump-only');
+  });
+
+  DESC = 'Commit, tag, push without incrementing the version.';
+  grunt.registerTask('bump-commit', DESC, 'bump::commit-only');
 };
 
