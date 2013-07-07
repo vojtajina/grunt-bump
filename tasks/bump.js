@@ -17,6 +17,7 @@ var exec = require('child_process').exec;
 module.exports = function(grunt) {
   grunt.registerTask('bump', 'Increment the version number.', function(versionType) {
     var opts = this.options({
+      bumpVersion: true,
       files: ['package.json'],
       updateConfigs: [], // array of config properties to update (with files)
       commit: true,
@@ -29,6 +30,19 @@ module.exports = function(grunt) {
       pushTo: 'upstream',
       gitDescribeOptions: '--tags --always --abbrev=1 --dirty=-d'
     });
+
+    if (grunt.option('bump-only')) {
+      grunt.verbose.writeln('Only incrementing the version (--bump-only set).');
+
+      opts.commit = false;
+      opts.createTag = false;
+      opts.push = false;
+    }
+
+    if (grunt.option('commit-only')) {
+      grunt.verbose.writeln('Only commiting/taggin/pushin (--commit-only set).');
+      opts.bumpVersion = false;
+    }
 
     var done = this.async();
     var queue = [];
@@ -50,7 +64,7 @@ module.exports = function(grunt) {
 
 
     // GET VERSION FROM GIT
-    runIf(versionType === 'git', function(){
+    runIf(opts.bumpVersion && versionType === 'git', function(){
       exec('git describe ' + opts.gitDescribeOptions, function(err, stdout, stderr){
         if (err) {
           grunt.fatal('Can not get a version number using `git describe`');
@@ -62,7 +76,7 @@ module.exports = function(grunt) {
 
 
     // BUMP ALL FILES
-    queue.push(function(){
+    runIf(opts.bumpVersion, function(){
       opts.files.forEach(function(file, idx) {
         var version = null;
         var content = grunt.file.read(file).replace(VERSION_REGEXP, function(match, prefix, parsedVersion, suffix) {

@@ -49,6 +49,14 @@ $ grunt bump:git
 >> Pushed to origin
 ````
 
+Sometimes you want to run another task between bumping the version and commiting, for instance generate changelog. You can use `--bump-only` and `--commit-only` arguments:
+
+```bash
+$ grunt bump:minor --bump-only
+$ grunt changelog
+$ grunt bump --commit-only
+```
+
 ## Configuration
 
 This shows all the available config options with their default values.
