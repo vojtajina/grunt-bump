@@ -79,26 +79,26 @@ module.exports = function(grunt) {
 
 
     // BUMP ALL FILES
-    runIf(opts.bumpVersion, function(){
-      opts.files.forEach(function(file, idx) {
-        var version = null;
-        var content = grunt.file.read(file).replace(VERSION_REGEXP, function(match, prefix, parsedVersion, suffix) {
-          version = gitVersion || semver.inc(parsedVersion, versionType || 'patch');
-          return prefix + version + suffix;
-        });
+    opts.files.forEach(function(file, idx) {
+      var version = null;
+      var content = grunt.file.read(file).replace(VERSION_REGEXP, function(match, prefix, parsedVersion, suffix) {
+        version = gitVersion || semver.inc(parsedVersion, versionType || 'patch');
+        return prefix + version + suffix;
+      });
 
-        if (!version) {
-          grunt.fatal('Can not find a version to bump in ' + file);
-        }
+      if (!version) {
+        grunt.fatal('Can not find a version to bump in ' + file);
+      }
 
+      if (!globalVersion) {
+        globalVersion = version;
+      } else if (globalVersion !== version) {
+        grunt.warn('Bumping multiple files with different versions!');
+      }
+
+      runIf(opts.bumpVersion, function() {
         grunt.file.write(file, content);
         grunt.log.ok('Version bumped to ' + version + (opts.files.length > 1 ? ' (in ' + file + ')' : ''));
-
-        if (!globalVersion) {
-          globalVersion = version;
-        } else if (globalVersion !== version) {
-          grunt.warn('Bumping multiple files with different versions!');
-        }
 
         var configProperty = opts.updateConfigs[idx];
         if (!configProperty) {
@@ -113,8 +113,8 @@ module.exports = function(grunt) {
         cfg.version = version;
         grunt.config(configProperty, cfg);
         grunt.log.ok(configProperty + '\'s version updated');
+        next();
       });
-      next();
     });
 
 
