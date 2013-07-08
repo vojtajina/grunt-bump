@@ -118,6 +118,18 @@ module.exports = function(grunt) {
     });
 
 
+    // when only commiting, read the version from package.json / pkg config
+    runIf(!opts.bumpVersion, function() {
+      if (opts.updateConfigs.length) {
+        globalVersion = grunt.config(opts.updateConfigs[0]).version;
+      } else {
+        globalVersion = grunt.file.readJSON(opts.files[0]).version;
+      }
+
+      next();
+    });
+
+
     // COMMIT
     runIf(opts.commit, function() {
       var commitMessage = opts.commitMessage.replace('%VERSION%', globalVersion);
