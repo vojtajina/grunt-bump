@@ -30,8 +30,7 @@ module.exports = function(grunt) {
       tagMessage: 'Version %VERSION%',
       push: true,
       pushTo: 'upstream',
-      gitDescribeOptions: '--tags --always --abbrev=1 --dirty=-d',
-      setVersion: false
+      gitDescribeOptions: '--tags --always --abbrev=1 --dirty=-d'
     });
 
     if (incOrCommitOnly === 'bump-only') {
@@ -48,9 +47,9 @@ module.exports = function(grunt) {
       opts.bumpVersion = false;
     }
 
-    var versionToSet = grunt.option('setversion');
-    if (semver.valid(versionToSet)) {
-      opts.setVersion = versionToSet;
+    var exactVersionToSet = grunt.option('setversion');
+    if (!semver.valid(exactVersionToSet)) {
+        exactVersionToSet = false;
     }
 
     var done = this.async();
@@ -89,7 +88,7 @@ module.exports = function(grunt) {
       opts.files.forEach(function(file, idx) {
         var version = null;
         var content = grunt.file.read(file).replace(VERSION_REGEXP, function(match, prefix, parsedVersion, suffix) {
-          version = opts.setVersion || gitVersion || semver.inc(parsedVersion, versionType || 'patch');
+          version = exactVersionToSet || gitVersion || semver.inc(parsedVersion, versionType || 'patch');
           return prefix + version + suffix;
         });
 
