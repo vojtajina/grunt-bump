@@ -21,6 +21,7 @@ module.exports = function(grunt) {
     var opts = this.options({
       bumpVersion: true,
       files: ['package.json'],
+      cwd: '.',
       updateConfigs: [], // array of config properties to update (with files)
       commit: true,
       commitMessage: 'Release v%VERSION%',
@@ -68,7 +69,7 @@ module.exports = function(grunt) {
 
     // GET VERSION FROM GIT
     runIf(opts.bumpVersion && versionType === 'git', function(){
-      exec('git describe ' + opts.gitDescribeOptions, function(err, stdout, stderr){
+      exec('git describe ' + opts.gitDescribeOptions, {cwd: opts.cwd}, function(err, stdout, stderr){
         if (err) {
           grunt.fatal('Can not get a version number using `git describe`');
         }
@@ -134,7 +135,7 @@ module.exports = function(grunt) {
     runIf(opts.commit, function() {
       var commitMessage = opts.commitMessage.replace('%VERSION%', globalVersion);
 
-      exec('git commit ' + opts.commitFiles.join(' ') + ' -m "' + commitMessage + '"', function(err, stdout, stderr) {
+      exec('git commit ' + opts.commitFiles.join(' ') + ' -m "' + commitMessage + '"', {cwd: opts.cwd}, function(err, stdout, stderr) {
         if (err) {
           grunt.fatal('Can not create the commit:\n  ' + stderr);
         }
@@ -149,7 +150,7 @@ module.exports = function(grunt) {
       var tagName = opts.tagName.replace('%VERSION%', globalVersion);
       var tagMessage = opts.tagMessage.replace('%VERSION%', globalVersion);
 
-      exec('git tag -a ' + tagName + ' -m "' + tagMessage + '"' , function(err, stdout, stderr) {
+      exec('git tag -a ' + tagName + ' -m "' + tagMessage + '"' , {cwd: opts.cwd}, function(err, stdout, stderr) {
         if (err) {
           grunt.fatal('Can not create the tag:\n  ' + stderr);
         }
@@ -161,7 +162,7 @@ module.exports = function(grunt) {
 
     // PUSH CHANGES
     runIf(opts.push, function() {
-      exec('git push ' + opts.pushTo + ' && git push ' + opts.pushTo + ' --tags', function(err, stdout, stderr) {
+      exec('git push ' + opts.pushTo + ' && git push ' + opts.pushTo + ' --tags', {cwd: opts.cwd}, function(err, stdout, stderr) {
         if (err) {
           grunt.fatal('Can not push to ' + opts.pushTo + ':\n  ' + stderr);
         }
