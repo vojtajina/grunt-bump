@@ -33,6 +33,7 @@
   "scripts": {
     "test": "grunt test"
   },
+  "license": "MIT",
   "dependencies": {
     "semver": "~1.1"
   },
