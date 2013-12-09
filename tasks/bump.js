@@ -47,6 +47,11 @@ module.exports = function(grunt) {
       opts.bumpVersion = false;
     }
 
+    var exactVersionToSet = grunt.option('setversion');
+    if (!semver.valid(exactVersionToSet)) {
+        exactVersionToSet = false;
+    }
+
     var done = this.async();
     var queue = [];
     var next = function() {
@@ -83,7 +88,7 @@ module.exports = function(grunt) {
       opts.files.forEach(function(file, idx) {
         var version = null;
         var content = grunt.file.read(file).replace(VERSION_REGEXP, function(match, prefix, parsedVersion, suffix) {
-          version = gitVersion || semver.inc(parsedVersion, versionType || 'patch');
+          version = exactVersionToSet || gitVersion || semver.inc(parsedVersion, versionType || 'patch');
           return prefix + version + suffix;
         });
 

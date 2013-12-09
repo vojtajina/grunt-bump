@@ -49,6 +49,16 @@ $ grunt bump:git
 >> Pushed to origin
 ````
 
+If you want to jump to an exact version, you can use the ```setversion``` tag in the command line.
+
+```
+$ grunt bump --setversion=2.0.1
+>> Version bumped to 2.0.1
+>> Committed as "Release v2.0.1"
+>> Tagged as "v2.0.1"
+>> Pushed to origin
+```
+
 Sometimes you want to run another task between bumping the version and commiting, for instance generate changelog. You can use `bump-only` and `bump-commit` to achieve that:
 
 ```bash
