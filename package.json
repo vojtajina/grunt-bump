@@ -9,15 +9,19 @@
   },
   "contributors": [
     "Mathias Paumgarten <paumgarten@soapcreative.com>",
+    "Elfrey Shira <elfrey.shira@opower.com>",
+    "Jonas Rabbe <jonas.rabbe@gmail.com>",
     "adam j. sontag <ajpiano@ajpiano.com>",
     "travis4all <travis4all@diamon.dz>",
-    "RobinQu <robinqu@gmail.com>",
     "Snugug <snugug@gmail.com>",
+    "angleman <angleman@users.noreply.github.com>",
     "Adam Biggs <adam.biggs@lightmaker.com>",
     "ylesaout <ylesaout@gmail.com>",
     "Gavin <gavin@kodekoan.com>",
     "Mathias Paumgarten <mail@mathias-paumgarten.com>",
-    "Mayhem <stepien.nicolas@gmail.com>"
+    "Mayhem <stepien.nicolas@gmail.com>",
+    "Michael Hellein <themichaek@gmail.com>",
+    "RobinQu <robinqu@gmail.com>"
   ],
   "repository": {
     "type": "git",
