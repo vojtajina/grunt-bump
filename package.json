@@ -1,11 +1,11 @@
 {
-  "name": "grunt-bump",
+  "name": "grunt-bump2",
   "description": "Bump package version",
   "version": "0.0.11",
-  "homepage": "https://github.com/vojtajina/grunt-bump",
+  "homepage": "https://github.com/CatTail/grunt-bump",
   "author": {
-    "name": "Vojta Jína",
-    "email": "vojta.jina@gmail.com"
+    "name": "CatTail",
+    "email": "zhongchiyu@gmail.com"
   },
   "contributors": [
     "Mathias Paumgarten <paumgarten@soapcreative.com>",
@@ -21,10 +21,10 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git://github.com/vojtajina/grunt-bump.git"
+    "url": "git://github.com/CatTail/grunt-bump.git"
   },
   "bugs": {
-    "url": "https://github.com/vojtajina/grunt-bump/issues"
+    "url": "https://github.com/CatTail/grunt-bump/issues"
   },
   "main": "grunt.js",
   "engines": {
