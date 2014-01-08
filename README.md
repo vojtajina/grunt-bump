@@ -17,7 +17,7 @@ Add this line to your project's `Gruntfile.js`:
 
 Let's say current version is `0.0.1`.
 
-````
+```bash
 $ grunt bump
 >> Version bumped to 0.0.2
 >> Committed as "Release v0.0.2"
@@ -42,22 +42,28 @@ $ grunt bump:major
 >> Tagged as "v1.0.0"
 >> Pushed to origin
 
-$ grunt bump:build
+$ grunt bump:prerelease
 >> Version bumped to 1.0.0-1
 >> Committed as "Release v1.0.0-1"
 >> Tagged as "v1.0.0-1"
 >> Pushed to origin
 
+$ grunt bump:patch
+>> Version bumped to 1.0.1
+>> Committed as "Release v1.0.1"
+>> Tagged as "v1.0.1"
+>> Pushed to origin
+
 $ grunt bump:git
->> Version bumped to 1.0.0-1-ge96c
->> Committed as "Release v1.0.0-1-ge96c"
->> Tagged as "v1.0.0-1-ge96c"
+>> Version bumped to 1.0.1-ge96c
+>> Committed as "Release v1.0.1-ge96c"
+>> Tagged as "v1.0.1-ge96c"
 >> Pushed to origin
 ````
 
 If you want to jump to an exact version, you can use the ```setversion``` tag in the command line.
 
-```
+```bash
 $ grunt bump --setversion=2.0.1
 >> Version bumped to 2.0.1
 >> Committed as "Release v2.0.1"
