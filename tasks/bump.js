@@ -83,7 +83,7 @@ module.exports = function(grunt) {
       });
     });
 
-    // GET VERSION FROM GIT
+    // GET VERSION FROM HG
     runIf(opts.bumpVersion && versionType === 'hg', function(){
       exec('hg id -i', function(err, stdout, stderr){
         if (err) {
