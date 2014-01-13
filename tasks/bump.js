@@ -20,8 +20,9 @@ module.exports = function(grunt) {
   grunt.registerTask('bump', DESC, function(versionType, incOrCommitOnly) {
     var opts = this.options({
       bumpVersion: true,
-      bumpREADME: true,
       files: ['package.json'],
+      bumpReadme: true,
+      readmeFile: 'README.md',
       updateConfigs: [], // array of config properties to update (with files)
       commit: true,
       commitMessage: 'Release v%VERSION%',
