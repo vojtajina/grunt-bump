@@ -128,11 +128,6 @@ module.exports = function(grunt) {
 
     // bump README.md,
     runIf(opts.bumpReadme, function() {
-      // read the first opts.file that was updated 
-      var versionFile = grunt.file.read(opts.files[0]);
-      // extract the version
-      var parsedVersion = VERSION_REGEXP.exec(versionFile)[2];
-
       /* 
        * regex to match markdown format in the example: 
        * Version: **[0.2.2](https://github.com/user/foobar/releases/tag/v0.2.2)**
@@ -150,16 +145,16 @@ module.exports = function(grunt) {
       var replaced = false;
       var content = grunt.file.read(opts.readmeFile).replace(readmeRegExp, function(match, leadText, version, urlUpToTag, versionUrl, endText,  offset, string) {
         replaced = true;
-        return  leadText + parsedVersion + urlUpToTag + parsedVersion + endText; 
+        return  leadText + globalVersion + urlUpToTag + globalVersion + endText; 
       });
 
       if (replaced === false) {
         grunt.fatal('Can not find text to bump in ' + opts.readmeFile);
-      } else if (parsedVersion.length === 0) {
-        grunt.fatal('Can not find a version to bump in ' + opts.files[0]);
+      } else if (globalVersion.length === 0) {
+        grunt.fatal('Can not find a version to bump');
       } else {
         grunt.file.write(opts.readmeFile, content);
-        grunt.log.ok(opts.readmeFile + ' version bumped to ' + parsedVersion);
+        grunt.log.ok(opts.readmeFile + ' version bumped to ' + globalVersion);
       }
     });
 
