@@ -146,7 +146,7 @@ module.exports = function(grunt) {
        * endText == ')**'
        *
        */
-      var readme_regexp = new RegExp('(' + opts.readmeText + " .*\\[)([\\d|.|-|a-z]+)(\\].*\\/v?)([\\d|.|-|a-z]+)(\\).*)", "i");
+      var readme_regexp = new RegExp("(^" + opts.readmeText + " .*\\[)([\\d|.|-|a-z]+)(\\].*\\/v?)([\\d|.|-|a-z]+)(\\).*)", "im");
       var replaced = false;
       var content = grunt.file.read(opts.readmeFile).replace(readme_regexp, function(match, leadText, version, urlUpToTag, versionUrl, endText,  offset, string) {
         replaced = true;
