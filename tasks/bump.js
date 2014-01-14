@@ -153,12 +153,14 @@ module.exports = function(grunt) {
         return  leadText + parsedVersion + urlUpToTag + parsedVersion + endText; 
       });
 
-      if (!parsedVersion) {
-        grunt.fatal('Can not find a version to bump in ' + opts.readmeFile);
+      if (replaced === false) {
+        grunt.fatal('Can not find text to bump in ' + opts.readmeFile);
+      } else if (parsedVersion.length === 0) {
+        grunt.fatal('Can not find a version to bump in ' + opts.files[0]);
+      } else {
+        grunt.file.write(opts.readmeFile, content);
+        grunt.log.ok(opts.readmeFile + ' version bumped to ' + parsedVersion);
       }
-
-      grunt.file.write(opts.readmeFile, content);
-      grunt.log.ok(opts.readmeFile + ' version bumped to ' + parsedVersion);
     });
 
     // when only commiting, read the version from package.json / pkg config
