@@ -23,6 +23,7 @@ module.exports = function(grunt) {
       files: ['package.json'],
       bumpReadme: true,
       readmeFile: 'README.md',
+      readmeText: 'Version:',
       updateConfigs: [], // array of config properties to update (with files)
       commit: true,
       commitMessage: 'Release v%VERSION%',
@@ -145,8 +146,10 @@ module.exports = function(grunt) {
        * endText == ')**'
        *
        */
-      var readme_regexp = /(version: .*\[)([\d|.|-|a-z]+)(\].*\/v?)([\d|.|-|a-z]+)(\).*)/i;
+      var readme_regexp = new RegExp('(' + opts.readmeText + " .*\\[)([\\d|.|-|a-z]+)(\\].*\\/v?)([\\d|.|-|a-z]+)(\\).*)", "i");
+      var replaced = false;
       var content = grunt.file.read(opts.readmeFile).replace(readme_regexp, function(match, leadText, version, urlUpToTag, versionUrl, endText,  offset, string) {
+        replaced = true;
         return  leadText + parsedVersion + urlUpToTag + parsedVersion + endText; 
       });
 
