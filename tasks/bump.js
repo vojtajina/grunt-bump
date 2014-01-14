@@ -21,7 +21,7 @@ module.exports = function(grunt) {
     var opts = this.options({
       bumpVersion: true,
       files: ['package.json'],
-      bumpReadme: true,
+      bumpReadme: false,
       readmeFile: 'README.md',
       readmeText: 'Version:',
       updateConfigs: [], // array of config properties to update (with files)
