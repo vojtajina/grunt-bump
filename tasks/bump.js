@@ -146,9 +146,9 @@ module.exports = function(grunt) {
        * endText == ')**'
        *
        */
-      var readme_regexp = new RegExp("(^" + opts.readmeText + " .*\\[)([\\d|.|-|a-z]+)(\\].*\\/v?)([\\d|.|-|a-z]+)(\\).*)", "im");
+      var readmeRegExp = new RegExp("(^" + opts.readmeText + " .*\\[)([\\d|.|-|a-z]+)(\\].*\\/v?)([\\d|.|-|a-z]+)(\\).*)", "img");
       var replaced = false;
-      var content = grunt.file.read(opts.readmeFile).replace(readme_regexp, function(match, leadText, version, urlUpToTag, versionUrl, endText,  offset, string) {
+      var content = grunt.file.read(opts.readmeFile).replace(readmeRegExp, function(match, leadText, version, urlUpToTag, versionUrl, endText,  offset, string) {
         replaced = true;
         return  leadText + parsedVersion + urlUpToTag + parsedVersion + endText; 
       });
