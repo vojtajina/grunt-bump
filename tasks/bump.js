@@ -156,6 +156,7 @@ module.exports = function(grunt) {
         grunt.file.write(opts.readmeFile, content);
         grunt.log.ok(opts.readmeFile + ' version bumped to ' + globalVersion);
       }
+      next();
     });
 
     // when only commiting, read the version from package.json / pkg config
