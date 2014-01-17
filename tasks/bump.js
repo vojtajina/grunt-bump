@@ -141,11 +141,15 @@ module.exports = function(grunt) {
        * endText == ')**'
        *
        */
-      var readmeRegExp = new RegExp("(^" + opts.readmeText + ".*\\[)([\\d|.|-|a-z]+)(\\].*\\/v?)([\\d|.|-|a-z]+)(\\).*)", "img");
+      var readmeRegExp = new RegExp("(^" + opts.readmeText + ".*\\[)([\\d|.|\\-|a-z]+)(\\].*\\/)([\\d|.|\\-|a-z]+)(\\).*)", "img");
       var replaced = false;
       var content = grunt.file.read(opts.readmeFile).replace(readmeRegExp, function(match, leadText, version, urlUpToTag, versionUrl, endText,  offset, string) {
         replaced = true;
-        return  leadText + globalVersion + urlUpToTag + globalVersion + endText; 
+        if (gitVersion) {
+          return leadText + gitVersion + urlUpToTag + gitVersion + endText;
+        } else {
+          return  leadText + globalVersion + urlUpToTag + opts.tagName.replace('%VERSION%', globalVersion) + endText; 
+        }
       });
 
       if (replaced === false) {
