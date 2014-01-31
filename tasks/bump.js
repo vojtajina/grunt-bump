@@ -29,7 +29,7 @@ module.exports = function(grunt) {
       tagName: 'v%VERSION%',
       tagMessage: 'Version %VERSION%',
       push: true,
-      pushTo: 'upstream',
+      pushTo: '`$(git rev-parse --abbrev-ref HEAD)`',
       gitDescribeOptions: '--tags --always --abbrev=1 --dirty=-d'
     });
 
