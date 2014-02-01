@@ -90,7 +90,9 @@ bump: {
     tagMessage: 'Version %VERSION%',
     push: true,
     pushTo: 'upstream',
-    gitDescribeOptions: '--tags --always --abbrev=1 --dirty=-d' // options to use with '$ git describe'
+    gitDescribeOptions: '--tags --always --abbrev=1 --dirty=-d' // options to use with '$ git describe',
+    signTags: false,
+    signCommits: false
   }
 }
 ```
@@ -131,3 +133,11 @@ Do you wanna push all these changes ?
 
 ### pushTo
 If so, which remote branch would you like to push to ?
+
+### signTags
+
+If so, the `-s` option will be passed to `git-tag`, making the tag GPG-signed using the default e-mail address’s key.
+
+### signCommits
+
+If so, the `-S` option will be passed to `git-commit`, making the commit GPG-signed using the default e-mail address’s key.
