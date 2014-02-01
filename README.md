@@ -113,6 +113,16 @@ If `options.push` is set to true, which remote repo should it go to?
 Type: `String`
 Default value: `--tags --always --abbrev=1 --dirty=-d`
 
+
+#### options.signTags
+Type: `Boolean`
+
+If true, the `-s` option will be passed to `git-tag`, making the tag GPG-signed using the default e-mail address’s key.
+
+#### options.signCommits
+
+If true, the `-S` option will be passed to `git-commit`, making the commit GPG-signed using the default e-mail address’s key.
+
 Options to use with `$ git describe`
 
 
