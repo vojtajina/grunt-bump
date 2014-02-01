@@ -33,7 +33,9 @@ module.exports = function(grunt) {
       tagMessage: 'Version %VERSION%',
       push: true,
       pushTo: 'upstream',
-      gitDescribeOptions: '--tags --always --abbrev=1 --dirty=-d'
+      gitDescribeOptions: '--tags --always --abbrev=1 --dirty=-d',
+      signTags: false,
+      signCommits: false
     });
 
     if (incOrCommitOnly === 'bump-only') {
@@ -142,8 +144,9 @@ module.exports = function(grunt) {
     // COMMIT
     runIf(opts.commit, function() {
       var commitMessage = opts.commitMessage.replace('%VERSION%', globalVersion);
+      var signCommit = opts.signCommits ? '-S ' : '';
 
-      exec('git commit ' + opts.commitFiles.join(' ') + ' -m "' + commitMessage + '"', function(err, stdout, stderr) {
+      exec('git commit ' + signCommit + opts.commitFiles.join(' ') + ' -m "' + commitMessage + '"', function(err, stdout, stderr) {
         if (err) {
           grunt.fatal('Can not create the commit:\n  ' + stderr);
         }
@@ -158,7 +161,9 @@ module.exports = function(grunt) {
       var tagName = opts.tagName.replace('%VERSION%', globalVersion);
       var tagMessage = opts.tagMessage.replace('%VERSION%', globalVersion);
 
-      exec('git tag -a ' + tagName + ' -m "' + tagMessage + '"' , function(err, stdout, stderr) {
+      var signOpt = opts.signTags ? '-s ' : '';
+
+      exec('git tag -a ' + signOpt + tagName + ' -m "' + tagMessage + '"' , function(err, stdout, stderr) {
         if (err) {
           grunt.fatal('Can not create the tag:\n  ' + stderr);
         }
