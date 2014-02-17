@@ -69,6 +69,7 @@ module.exports = function(grunt) {
     var globalVersion; // when bumping multiple files
     var gitVersion;    // when bumping using `git describe`
     var VERSION_REGEXP = /([\'|\"]?version[\'|\"]?[ ]*:[ ]*[\'|\"]?)([\d||A-a|.|-]*)([\'|\"]?)/i;
+    var currentBranch; // the current git branch to push to
 
 
     // GET VERSION FROM GIT
@@ -82,6 +83,21 @@ module.exports = function(grunt) {
       });
     });
 
+    // GET THE CURRENT GIT BRANCH
+    runIf(opts.push, function() {
+      var gitCommand = 'git rev-parse --abbrev-ref HEAD';
+      grunt.log.debug("Getting current branch: `" + gitCommand + '`');
+      exec(gitCommand , function(err, stdout, stderr) {
+        if (err) {
+          grunt.fatal('Cannot get branch:\n  ' + stderr + stdout);
+        }
+        currentBranch = stdout;
+
+        grunt.verbose.write('Current branch set to: ' + currentBranch);
+
+        next();
+      });
+    });
 
     // BUMP ALL FILES
     runIf(opts.bumpVersion, function(){
@@ -140,9 +156,11 @@ module.exports = function(grunt) {
     runIf(opts.commit, function() {
       var commitMessage = opts.commitMessage.replace('%VERSION%', globalVersion);
 
-      exec('git commit ' + opts.commitFiles.join(' ') + ' -m "' + commitMessage + '"', function(err, stdout, stderr) {
+      var gitCommand = 'git commit ' + opts.commitFiles.join(' ') + ' -m "' + commitMessage + '"';
+      grunt.log.debug('Committing Files: `' + gitCommand+ '`');
+      exec(gitCommand, function(err, stdout, stderr) {
         if (err) {
-          grunt.fatal('Can not create the commit:\n  ' + stderr);
+          grunt.fatal('Can not create the commit:\n  ' + stderr + stdout);
         }
         grunt.log.ok('Committed as "' + commitMessage + '"');
         next();
@@ -155,9 +173,11 @@ module.exports = function(grunt) {
       var tagName = opts.tagName.replace('%VERSION%', globalVersion);
       var tagMessage = opts.tagMessage.replace('%VERSION%', globalVersion);
 
-      exec('git tag -a ' + tagName + ' -m "' + tagMessage + '"' , function(err, stdout, stderr) {
+      var gitCommand = 'git tag -a ' + tagName + ' -m "' + tagMessage + '"';
+      grunt.log.debug('Creating tag: `' + gitCommand + '`');
+      exec(gitCommand , function(err, stdout, stderr) {
         if (err) {
-          grunt.fatal('Can not create the tag:\n  ' + stderr);
+          grunt.fatal('Can not create the tag:\n  ' + stderr + stdout);
         }
         grunt.log.ok('Tagged as "' + tagName + '"');
         next();
@@ -167,11 +187,14 @@ module.exports = function(grunt) {
 
     // PUSH CHANGES
     runIf(opts.push, function() {
-      exec('git push ' + opts.pushTo + ' && git push ' + opts.pushTo + ' --tags', function(err, stdout, stderr) {
+      var pushToBranch = opts.pushTo + ' ' + currentBranch;
+      var gitCommand = 'git push ' + pushToBranch + ' && git push ' + opts.pushTo + ' --tags';
+      grunt.log.debug('Pushing changes and tags: `' + gitCommand + '`');
+      exec(gitCommand, function(err, stdout, stderr) {
         if (err) {
-          grunt.fatal('Can not push to ' + opts.pushTo + ':\n  ' + stderr);
+          grunt.fatal('Can not push to ' + pushToBranch + ':\n  ' + stderr + stdout);
         }
-        grunt.log.ok('Pushed to ' + opts.pushTo);
+        grunt.log.ok('Pushed to ' + pushToBranch);
         next();
       });
     });
