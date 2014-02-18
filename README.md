@@ -83,7 +83,7 @@ bump: {
     files: ['package.json'],
     updateConfigs: [],
     commit: true,
-    commitMessage: 'Release v%VERSION%',
+    commitMessage: grunt.option('commit') || 'Release v%VERSION%',
     commitFiles: ['package.json'], // '-a' for all files
     createTag: true,
     tagName: 'v%VERSION%',
@@ -113,6 +113,13 @@ Do you wanna commit the changes ?
 
 ### commitMessage
 If so, what is the commit message ? You can use `%VERSION%` which will get replaced with the new version.
+
+Set to a custom message with ```--commit [your message]```:
+```js
+grunt bump --commit 'i fixed the bug in foo'
+```
+
+(note this requires that you keep the syntax ```grunt.option('commit')``` in the bump configuration as shown above)
 
 ### commitFiles
 An array of files that you wanna commit. You can use `['-a']` to commit all files.
