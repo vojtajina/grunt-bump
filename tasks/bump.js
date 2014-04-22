@@ -88,7 +88,7 @@ module.exports = function(grunt) {
 
     // BUMP ALL FILES
     runIf(opts.bumpVersion, function(){
-      opts.files.forEach(function(file, idx) {
+      grunt.file.expand(opts.files).forEach(function(file, idx) {
         var version = null;
         var content = grunt.file.read(file).replace(VERSION_REGEXP, function(match, prefix, parsedVersion, suffix) {
           gitVersion = gitVersion && parsedVersion + '-' + gitVersion;
@@ -143,7 +143,7 @@ module.exports = function(grunt) {
     runIf(opts.commit, function() {
       var commitMessage = opts.commitMessage.replace('%VERSION%', globalVersion);
 
-      exec('git commit ' + opts.commitFiles.join(' ') + ' -m "' + commitMessage + '"', function(err, stdout, stderr) {
+      exec('git commit ' + grunt.file.expand(opts.commitFiles).join(' ') + ' -m "' + commitMessage + '"', function(err, stdout, stderr) {
         if (err) {
           grunt.fatal('Can not create the commit:\n  ' + stderr);
         }

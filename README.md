@@ -46,7 +46,7 @@ grunt.initConfig({
 Type: `Array`
 Default value: `['package.json']`
 
-List of files to bump. Maybe you wanna bump 'component.json' as well ?
+Maybe you wanna bump 'component.json' instead? Or maybe both: `['package.json', 'component.json']`? Can be either a list of files to bump (an array of files) or a grunt glob ( eg: `['*.json']` ).
 
 #### options.updateConfigs
 Type: `Array`
