@@ -22,7 +22,8 @@
     "Mathias Paumgarten <mail@mathias-paumgarten.com>",
     "Mayhem <stepien.nicolas@gmail.com>",
     "Michael Hellein <themichaek@gmail.com>",
-    "RobinQu <robinqu@gmail.com>"
+    "RobinQu <robinqu@gmail.com>",
+    "Ahmad Nassri <ahmad@codeinchaos.com>"
   ],
   "repository": {
     "type": "git",
@@ -40,7 +41,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "semver": "~1.1"
+    "semver": "^2.2.1"
   },
   "peerDependencies": {
     "grunt": "~0.4"

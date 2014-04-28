@@ -30,7 +30,8 @@ module.exports = function(grunt) {
       tagMessage: 'Version %VERSION%',
       push: true,
       pushTo: 'upstream',
-      gitDescribeOptions: '--tags --always --abbrev=1 --dirty=-d'
+      gitDescribeOptions: '--tags --always --abbrev=1 --dirty=-d',
+      prereleasePrefix: false
     });
 
     if (incOrCommitOnly === 'bump-only') {
@@ -89,6 +90,15 @@ module.exports = function(grunt) {
         var version = null;
         var content = grunt.file.read(file).replace(VERSION_REGEXP, function(match, prefix, parsedVersion, suffix) {
           gitVersion = gitVersion && parsedVersion + '-' + gitVersion;
+
+          // try to set/overwrite the prerelease prefix
+          if (versionType == 'prerelease' && opts.prereleasePrefix !== false) {
+            var regex = new RegExp(opts.prereleasePrefix, 'g');
+            if (regex.test(parsedVersion) === false) {
+              parsedVersion = semver.inc(parsedVersion, 'patch') + '-' + opts.prereleasePrefix;
+            }
+          }
+
           version = exactVersionToSet || gitVersion || semver.inc(parsedVersion, versionType || 'patch');
           return prefix + version + suffix;
         });

@@ -17,7 +17,7 @@ Add this line to your project's `Gruntfile.js`:
 
 Let's say current version is `0.0.1`.
 
-````
+```bash
 $ grunt bump
 >> Version bumped to 0.0.2
 >> Committed as "Release v0.0.2"
@@ -42,7 +42,7 @@ $ grunt bump:major
 >> Tagged as "v1.0.0"
 >> Pushed to origin
 
-$ grunt bump:build
+$ grunt bump:prerelease
 >> Version bumped to 1.0.0-1
 >> Committed as "Release v1.0.0-1"
 >> Tagged as "v1.0.0-1"
@@ -53,15 +53,34 @@ $ grunt bump:git
 >> Committed as "Release v1.0.0-1-ge96c"
 >> Tagged as "v1.0.0-1-ge96c"
 >> Pushed to origin
-````
+```
 
 If you want to jump to an exact version, you can use the ```setversion``` tag in the command line.
 
-```
+```bash
 $ grunt bump --setversion=2.0.1
 >> Version bumped to 2.0.1
 >> Committed as "Release v2.0.1"
 >> Tagged as "v2.0.1"
+>> Pushed to origin
+```
+
+If you want to jump to add a prefix/identifier for prereleases (e.g. `alpha`, `beta`, `rc`), use the `prereleaseIdentifier` option:
+
+
+```js
+bump: {
+  options: {
+    prereleasePrefix: 'beta'
+  }
+}
+```
+
+```bash
+$ grunt bump:prerelease
+>> Version bumped to 1.0.0-beta.1
+>> Committed as "Release v1.0.0-beta.1"
+>> Tagged as "v1.0.0-beta.1"
 >> Pushed to origin
 ```
 
@@ -90,7 +109,8 @@ bump: {
     tagMessage: 'Version %VERSION%',
     push: true,
     pushTo: 'upstream',
-    gitDescribeOptions: '--tags --always --abbrev=1 --dirty=-d' // options to use with '$ git describe'
+    gitDescribeOptions: '--tags --always --abbrev=1 --dirty=-d' // options to use with '$ git describe',
+    prereleasePrefix: false
   }
 }
 ```
@@ -131,3 +151,6 @@ Do you wanna push all these changes ?
 
 ### pushTo
 If so, which remote branch would you like to push to ?
+
+### prereleasePrefix
+A string value to use as the prerelease prefix. e.g. `alpha`, `beta`, `rc`, etc ...
