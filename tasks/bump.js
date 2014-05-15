@@ -28,6 +28,7 @@ module.exports = function(grunt) {
       createTag: true,
       tagName: 'v%VERSION%',
       tagMessage: 'Version %VERSION%',
+      publishNpm: false,
       push: true,
       pushTo: 'upstream',
       gitDescribeOptions: '--tags --always --abbrev=1 --dirty=-d'
@@ -172,6 +173,17 @@ module.exports = function(grunt) {
           grunt.fatal('Can not push to ' + opts.pushTo + ':\n  ' + stderr);
         }
         grunt.log.ok('Pushed to ' + opts.pushTo);
+        next();
+      });
+    });
+
+    // Publish to NPM
+    runIf(opts.publishNpm, function() {
+      exec('npm publish', function(err, stdout, stderr) {
+        if (err) {
+          grunt.fatal('Can not publish to NPM:\n  ' + stderr);
+        }
+        grunt.log.ok('Published to NPM ');
         next();
       });
     });

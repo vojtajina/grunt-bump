@@ -88,6 +88,7 @@ bump: {
     createTag: true,
     tagName: 'v%VERSION%',
     tagMessage: 'Version %VERSION%',
+    publishNpm: false,
     push: true,
     pushTo: 'upstream',
     gitDescribeOptions: '--tags --always --abbrev=1 --dirty=-d' // options to use with '$ git describe'
@@ -125,6 +126,9 @@ If so, this is the name of that tag (`%VERSION%` placeholder is available).
 
 ### tagMessage
 Yep, you guessed right, it's the message of that tag - description (`%VERSION%` placeholder is available).
+
+### publishNpm
+If true, will execute `npm publish` to publish your changes to NPM.
 
 ### push
 Do you wanna push all these changes ?
