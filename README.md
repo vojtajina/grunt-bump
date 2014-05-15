@@ -96,7 +96,7 @@ bump: {
 ```
 
 ### files
-List of files to bump. Maybe you wanna bump 'component.json' as well ?
+List of files to bump. Can be either an array of files or a grunt glob ( eg: `['*.json']` ). Maybe you wanna bump 'component.json' as well ?
 
 ### updateConfigs
 Sometimes you load the content of `package.json` into a grunt config. This will update the config property, so that even tasks running in the same grunt process see the updated value.
