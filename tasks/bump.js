@@ -21,6 +21,9 @@ module.exports = function(grunt) {
     var opts = this.options({
       bumpVersion: true,
       files: ['package.json'],
+      bumpReadme: false,
+      readmeFile: 'README.md',
+      readmeText: 'Version:',
       updateConfigs: [], // array of config properties to update (with files)
       commit: true,
       commitMessage: 'Release v%VERSION%',
@@ -123,6 +126,42 @@ module.exports = function(grunt) {
       next();
     });
 
+    // bump README.md,
+    runIf(opts.bumpReadme, function() {
+      /* 
+       * regex to match markdown format in the example: 
+       * Version: **[0.2.2](https://github.com/user/foobar/releases/tag/v0.2.2)**
+       *
+       * Match groups for replace function are:
+       *
+       * leadText == 'Version: **['
+       * version  == '0.2.2'
+       * urlUpToTag == 'https://github.com/user/foobar/releases/tag/v'
+       * versionUrl == '0.2.2'
+       * endText == ')**'
+       *
+       */
+      var readmeRegExp = new RegExp("(^" + opts.readmeText + ".*\\[)([\\d|.|\\-|a-z]+)(\\].*\\/)([\\d|.|\\-|a-z]+)(\\).*)", "img");
+      var replaced = false;
+      var content = grunt.file.read(opts.readmeFile).replace(readmeRegExp, function(match, leadText, version, urlUpToTag, versionUrl, endText,  offset, string) {
+        replaced = true;
+        if (gitVersion) {
+          return leadText + gitVersion + urlUpToTag + gitVersion + endText;
+        } else {
+          return  leadText + globalVersion + urlUpToTag + opts.tagName.replace('%VERSION%', globalVersion) + endText; 
+        }
+      });
+
+      if (replaced === false) {
+        grunt.fatal('Can not find text to bump in ' + opts.readmeFile);
+      } else if (globalVersion.length === 0) {
+        grunt.fatal('Can not find a version to bump');
+      } else {
+        grunt.file.write(opts.readmeFile, content);
+        grunt.log.ok(opts.readmeFile + ' version bumped to ' + globalVersion);
+      }
+      next();
+    });
 
     // when only commiting, read the version from package.json / pkg config
     runIf(!opts.bumpVersion, function() {

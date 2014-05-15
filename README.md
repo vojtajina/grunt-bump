@@ -81,6 +81,9 @@ This shows all the available config options with their default values.
 bump: {
   options: {
     files: ['package.json'],
+    bumpReadme: false,
+    readmeFile: 'README.md',
+    readmeText: 'Version: ',
     updateConfigs: [],
     commit: true,
     commitMessage: 'Release v%VERSION%',
@@ -107,6 +110,29 @@ bump: {
   updateConfigs: ['pkg',          'component']
 }
 ```
+
+### update README.md
+In your README.md file you might want to have a link to the latest tagged version of your project. Changing `bumpReadme` to true will update the text and link to your latest tagged version.
+
+```js
+bump: {
+  bumpReadme: true,
+  readmeFile: 'README.md',
+  readmeText: 'Version: '  
+}
+```
+
+The `readmeText` option is the text that will precede the link to the latest tagged version. The text should be on it's own line and should be formated like the following example:
+
+```markdown
+Version: **[1.0.7](https://github.com/foobar/project/releases/tag/v1.0.7)**
+``` 
+
+Setting the `readmeText` option to the following `readmeText: 'Latest Version: '` would match the following example:
+
+```markdown
+Latest Version: **[1.0.7](https://github.com/foobar/project/releases/tag/v1.0.7)**
+``` 
 
 ### commit
 Do you wanna commit the changes ?
