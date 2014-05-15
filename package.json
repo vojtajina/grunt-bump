@@ -24,10 +24,7 @@
     "Michael Hellein <themichaek@gmail.com>",
     "RobinQu <robinqu@gmail.com>"
   ],
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/vojtajina/grunt-bump.git"
-  },
+  "repository": "vojtajina/grunt-bump",
   "bugs": {
     "url": "https://github.com/vojtajina/grunt-bump/issues"
   },
@@ -36,19 +33,23 @@
     "node": ">= 0.8.0"
   },
   "scripts": {
-    "test": "grunt test"
+    "test": "grunt nodeunit"
   },
   "license": "MIT",
   "dependencies": {
     "semver": "~1.1"
   },
   "peerDependencies": {
-    "grunt": "~0.4"
+    "grunt": ">=0.4.0"
   },
   "devDependencies": {
-    "grunt": "~0.4",
-    "grunt-npm": "~0.0.1",
-    "grunt-auto-release": "~0.0.3"
+    "grunt": "^0.4.0",
+    "grunt-auto-release": "^0.0.6",
+    "grunt-contrib-clean": "^0.5.0",
+    "grunt-contrib-jshint": "^0.10.0",
+    "grunt-contrib-nodeunit": "^0.4.0",
+    "grunt-npm": "^0.0.2",
+    "load-grunt-tasks": "^0.4.0"
   },
   "keywords": [
     "gruntplugin"

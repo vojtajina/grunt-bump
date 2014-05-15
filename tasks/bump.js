@@ -11,6 +11,9 @@
  * @author Mathias Paumgarten <mail@mathias-paumgarten.com>
  * @author Adam Biggs <email@adambig.gs>
  */
+
+'use strict';
+
 var semver = require('semver');
 var exec = require('child_process').exec;
 
