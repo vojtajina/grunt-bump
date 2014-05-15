@@ -1,7 +1,7 @@
 {
   "name": "grunt-bump",
   "description": "Bump package version",
-  "version": "0.0.13",
+  "version": "0.0.14”,
   "homepage": "https://github.com/vojtajina/grunt-bump",
   "author": {
     "name": "Vojta Jína",
@@ -22,7 +22,8 @@
     "Mathias Paumgarten <mail@mathias-paumgarten.com>",
     "Mayhem <stepien.nicolas@gmail.com>",
     "Michael Hellein <themichaek@gmail.com>",
-    "RobinQu <robinqu@gmail.com>"
+    "RobinQu <robinqu@gmail.com>",
+    "cortfritz <cortfritz@me.com>"
   ],
   "repository": {
     "type": "git",
