@@ -1,19 +1,122 @@
 # grunt-bump
 
-**Bump package version, create tag, commit, push...**
+> Bump package version, create tag, commit, push ...
 
-## Installation
+## Getting Started
+This plugin requires Grunt.
 
-Install npm package, next to your project's `Gruntfile.js` file:
+If you haven't used [Grunt](http://gruntjs.com/) before, be sure to check out the [Getting Started](http://gruntjs.com/getting-started) guide, as it explains how to create a [Gruntfile](http://gruntjs.com/sample-gruntfile) as well as install and use Grunt plugins. Once you're familiar with that process, you may install this plugin with this command:
 
-    npm install grunt-bump --save-dev
+```shell
+npm install grunt-bump --save-dev
+```
 
-Add this line to your project's `Gruntfile.js`:
+Once the plugin has been installed, it may be enabled inside your Gruntfile with this line of JavaScript:
 
-    grunt.loadNpmTasks('grunt-bump');
+```js
+grunt.loadNpmTasks('grunt-bump');
+```
+
+### Configuration
+In your project's Gruntfile, add a section named `bump` to the data object passed into `grunt.initConfig()`. The options (and defaults) are:
+
+```js
+grunt.initConfig({
+  bump: {
+    options: {
+      files: ['package.json'],
+      updateConfigs: [],
+      commit: true,
+      commitMessage: 'Release v%VERSION%',
+      commitFiles: ['package.json'],
+      createTag: true,
+      tagName: 'v%VERSION%',
+      tagMessage: 'Version %VERSION%',
+      push: true,
+      pushTo: 'upstream',
+      gitDescribeOptions: '--tags --always --abbrev=1 --dirty=-d'
+    }
+  },
+})
+```
+
+### Options
+
+#### options.files
+Type: `Array`
+Default value: `['package.json']`
+
+List of files to bump. Maybe you wanna bump 'component.json' as well ?
+
+#### options.updateConfigs
+Type: `Array`
+Default value: `[]`
+
+Sometimes you load the content of `package.json` into a grunt config. This will update the config property, so that even tasks running in the same grunt process see the updated value.
+
+```js
+bump: {
+  files:         ['package.json', 'component.json'],
+  updateConfigs: ['pkg',          'component']
+}
+```
+
+#### options.commit
+Type: `Boolean`
+Default value: `true`
+
+Should the changes be committed? False if you want to do additional things.
+
+#### options.commitMessage
+Type: `String`
+Default value: `Release v%VERSION%`
+
+If so, what is the commit message ? You can use `%VERSION%` which will get replaced with the new version.
+
+#### options.commitFiles
+Type: `Array`
+Default value: `['package.json']`
+
+An array of files that you want to commit. You can use `['-a']` to commit all files.
+
+#### options.createTag
+Type: `Boolean`
+Default value: `true`
+
+Create a Git tag?
+
+#### options.tagName
+Type: `String`
+Default value: `v%VERSION%`
+
+If `options.createTag` is set to true, then this is the name of that tag (`%VERSION%` placeholder is available).
+
+#### options.tagMessage
+Type: `String`
+Default value: `Version %VERSION%`
+
+If `options.createTag` is set to true, then yep, you guessed right, it's the message of that tag - description (`%VERSION%` placeholder is available).
+
+#### options.push
+Type: `Boolean`
+Default value: `true`
+
+Push the changes to a remote repo?
+
+#### options.pushTo
+Type: `String`
+Default value: `upstream`
+
+If `options.push` is set to true, which remote repo should it go to?
+
+#### options.gitDescribeOptions
+Type: `String`
+Default value: `--tags --always --abbrev=1 --dirty=-d`
+
+Options to use with `$ git describe`
 
 
-## Usage
+### Usage Examples
 
 Let's say current version is `0.0.1`.
 
@@ -73,61 +176,8 @@ $ grunt changelog
 $ grunt bump-commit
 ```
 
-## Configuration
+## Contributing
+In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).
 
-This shows all the available config options with their default values.
-
-```js
-bump: {
-  options: {
-    files: ['package.json'],
-    updateConfigs: [],
-    commit: true,
-    commitMessage: 'Release v%VERSION%',
-    commitFiles: ['package.json'], // '-a' for all files
-    createTag: true,
-    tagName: 'v%VERSION%',
-    tagMessage: 'Version %VERSION%',
-    push: true,
-    pushTo: 'upstream',
-    gitDescribeOptions: '--tags --always --abbrev=1 --dirty=-d' // options to use with '$ git describe'
-  }
-}
-```
-
-### files
-List of files to bump. Maybe you wanna bump 'component.json' as well ?
-
-### updateConfigs
-Sometimes you load the content of `package.json` into a grunt config. This will update the config property, so that even tasks running in the same grunt process see the updated value.
-
-```js
-bump: {
-  files:         ['package.json', 'component.json'],
-  updateConfigs: ['pkg',          'component']
-}
-```
-
-### commit
-Do you wanna commit the changes ?
-
-### commitMessage
-If so, what is the commit message ? You can use `%VERSION%` which will get replaced with the new version.
-
-### commitFiles
-An array of files that you wanna commit. You can use `['-a']` to commit all files.
-
-### createTag
-Do you wanna create a tag ?
-
-### tagName
-If so, this is the name of that tag (`%VERSION%` placeholder is available).
-
-### tagMessage
-Yep, you guessed right, it's the message of that tag - description (`%VERSION%` placeholder is available).
-
-### push
-Do you wanna push all these changes ?
-
-### pushTo
-If so, which remote branch would you like to push to ?
+## License
+Copyright (c) 2014 Vojta Jína. Licensed under the MIT license.
