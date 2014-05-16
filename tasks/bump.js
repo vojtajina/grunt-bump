@@ -143,8 +143,27 @@ module.exports = function(grunt) {
     runIf(opts.commit, function() {
       var commitMessage = opts.commitMessage.replace('%VERSION%', globalVersion);
 
-      exec('git commit ' + grunt.file.expand(opts.commitFiles).join(' ') + ' -m "' + commitMessage + '"', function(err, stdout, stderr) {
+      // Support committed file path lookup or adding all indexed files.
+      var gitCommitArguments = [],
+          addFilePaths = [];
+      if (opts.commitFiles.length) {
+         opts.commitFiles.forEach(function(filePath) {
+          // If filePath begins with '-' assumed to be valid git commit argument
+          if (filePath.indexOf('-') === 0) {
+            if (filePath.toLowerCase() === '-m') {
+              grunt.fatal('Commit files should not include the commit message argument as it is already built in.');
+            }
+            gitCommitArguments.push(filePath);
+          } else {
+             addFilePaths.push(filePath);
+          }       
+        });
+        gitCommitArguments = gitCommitArguments.concat(grunt.file.expand(addFilePaths));
+      }
+
+      exec('git commit ' + gitCommitArguments.join(' ') + ' -m "' + commitMessage + '"', function(err, stdout, stderr) {
         if (err) {
+          grunt.log.debug('Could not create commit:', stdout);
           grunt.fatal('Can not create the commit:\n  ' + stderr);
         }
         grunt.log.ok('Committed as "' + commitMessage + '"');
