@@ -28,6 +28,7 @@ module.exports = function(grunt) {
       commit: true,
       commitMessage: 'Release v%VERSION%',
       commitFiles: ['package.json'], // '-a' for all files
+      indexNewFiles: [],
       createTag: true,
       tagName: 'v%VERSION%',
       tagMessage: 'Version %VERSION%',
@@ -138,6 +139,38 @@ module.exports = function(grunt) {
       next();
     });
 
+    // INDEX NEW FILES
+    runIf(opts.commit, function() {
+      if (opts.indexNewFiles.length) {
+        
+        var gitAddArguments = [],
+            addFilePaths = [],
+            filePaths;
+
+        opts.indexNewFiles.forEach(function(filePath) {
+          // If filePath begins with '-' assumed to be valid git add argument
+          if (filePath.indexOf('-') === 0) {
+            gitAddArguments.push(filePath);
+          } else {
+            addFilePaths.push(filePath);
+          }       
+        });
+
+        filePaths = grunt.file.expand(addFilePaths);
+        gitAddArguments = gitAddArguments.concat(filePaths);
+
+        exec('git add ' + gitAddArguments.join(' '), function(err, stdout, stderr) {
+          if (err) {
+            grunt.log.debug('Could not index new files:', stdout);
+            grunt.fatal('Can not index new files:\n ' + stderr);
+          }
+          grunt.log.ok('Added new files to index.');
+          next();
+        });
+      } else {
+        next();
+      }
+    });
 
     // COMMIT
     runIf(opts.commit, function() {
