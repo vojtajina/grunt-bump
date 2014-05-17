@@ -143,7 +143,7 @@ module.exports = function(grunt) {
     runIf(opts.commit, function() {
       var commitMessage = opts.commitMessage.replace('%VERSION%', globalVersion);
 
-      exec('git commit ' + grunt.file.expand(opts.commitFiles).join(' ') + ' -m "' + commitMessage + '"', function(err, stdout, stderr) {
+      exec('git commit ' + opts.commitFiles.join(' ') + ' -m "' + commitMessage + '"', function(err, stdout, stderr) {
         if (err) {
           grunt.fatal('Can not create the commit:\n  ' + stderr);
         }
@@ -192,4 +192,3 @@ module.exports = function(grunt) {
   DESC = 'Commit, tag, push without incrementing the version.';
   grunt.registerTask('bump-commit', DESC, 'bump::commit-only');
 };
-
