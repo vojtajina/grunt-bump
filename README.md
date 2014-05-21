@@ -115,6 +115,15 @@ Default value: `--tags --always --abbrev=1 --dirty=-d`
 
 Options to use with `$ git describe`
 
+#### options.signTags
+Type: `Boolean`
+
+If true, the `-s` option will be passed to `git-tag`, making the tag GPG-signed using the default e-mail address’s key.
+
+#### options.signCommits
+
+If true, the `-S` option will be passed to `git-commit`, making the commit GPG-signed using the default e-mail address’s key.
+
 
 ### Usage Examples
 
