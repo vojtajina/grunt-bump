@@ -155,10 +155,17 @@ module.exports = function(grunt) {
 
     // CREATE TAG
     runIf(opts.createTag, function() {
+      var hasTagMessage = Boolean(opts.tagMessage);
       var tagName = opts.tagName.replace('%VERSION%', globalVersion);
-      var tagMessage = opts.tagMessage.replace('%VERSION%', globalVersion);
+      var tagMessage = hasTagMessage && opts.tagMessage.replace('%VERSION%', globalVersion);
+      var taggingCommand = function () {
+        if ( hasTagMessage ) {
+          return 'git tag -a ' + tagName + ' -m "' + tagMessage + '"';
+        }
+        return 'git tag ' + tagName;
+      };
 
-      exec('git tag -a ' + tagName + ' -m "' + tagMessage + '"' , function(err, stdout, stderr) {
+      exec(taggingCommand(), function(err, stdout, stderr) {
         if (err) {
           grunt.fatal('Can not create the tag:\n  ' + stderr);
         }
