@@ -45,7 +45,7 @@ module.exports = function(grunt) {
     }
 
     if (incOrCommitOnly === 'commit-only') {
-      grunt.verbose.writeln('Only commiting/taggin/pushing.');
+      grunt.verbose.writeln('Only committing/tagging/pushing.');
 
       opts.bumpVersion = false;
     }
