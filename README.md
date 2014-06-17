@@ -183,7 +183,7 @@ $ grunt bump-commit
 ```
 
 ## Contributing
-See the [contributing guide](https://github.com/vojtajina/grunt-bump/edit/master/README.md) for more information. In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).
+See the [contributing guide](https://github.com/vojtajina/grunt-bump/blob/master/CONTRIBUTING.md) for more information. In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).
 
 ## License
 Copyright (c) 2014 Vojta Jína. Licensed under the MIT license.
