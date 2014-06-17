@@ -115,6 +115,11 @@ Default value: `--tags --always --abbrev=1 --dirty=-d`
 
 Options to use with `$ git describe`
 
+#### options.indexNewFiles
+Type: `Array`
+Default value: undefined
+
+If `options.indexNewFiles` contains at least one file path or git flag, the task will `git add` newly created files before it commits.
 
 ### Usage Examples
 
