@@ -35,6 +35,10 @@ module.exports = function(grunt) {
       pushTo: 'upstream',
       gitDescribeOptions: '--tags --always --abbrev=1 --dirty=-d'
     });
+    
+    if (opts.type && !versionType) {
+      versionType = opts.type;
+    }
 
     if (incOrCommitOnly === 'bump-only') {
       grunt.verbose.writeln('Only incrementing the version.');
@@ -50,7 +54,7 @@ module.exports = function(grunt) {
       opts.bumpVersion = false;
     }
 
-    var exactVersionToSet = grunt.option('setversion');
+    var exactVersionToSet = grunt.option('setversion') || opts.version || '';
     if (!semver.valid(exactVersionToSet)) {
         exactVersionToSet = false;
     }
