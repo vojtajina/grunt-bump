@@ -77,25 +77,24 @@ module.exports = function(grunt) {
 
     // GET VERSION
     runIf(opts.bumpVersion, function(){
-      runIf(versionType === 'git', function() {
-        exec('git describe ' + opts.gitDescribeOptions, function(err, stdout, stderr){
-          if (err) {
-            grunt.fatal('Can not get a version number using `git describe`');
-          }
-          gitVersion = stdout.trim();
-          next();
-        });
+      // default to git
+      var execCmd = 'git describe ' + opts.gitDescribeOptions;
+      var fatalMsg = 'Can not get a version number using `git describe`';
+
+      // check if hg
+      if (opts.vcs === 'hg') {
+        execCmd = 'hg id -i';
+        fatalMsg = 'Can not get a version number using `hg id`';
+      }
+
+      exec(execCmd, function(err, stdout, stderr){
+        if (err) {
+          grunt.fatal(fatalMsg);
+        }
+        gitVersion = stdout.trim();
+        next();
       });
 
-      runIf(versionType === 'hg', function() {
-        exec('hg id -i', function(err, stdout, stderr){
-          if (err) {
-            grunt.fatal('Can not get a version number using `hg id`');
-          }
-          gitVersion = stdout.trim();
-          next();
-        });
-      });
     });
 
 
@@ -156,29 +155,26 @@ module.exports = function(grunt) {
     runIf(opts.commit, function() {
       var commitMessage = opts.commitMessage.replace('%VERSION%', globalVersion);
 
-      runIf(opts.vcs === 'git', function() {
-        exec('git commit ' + opts.commitFiles.join(' ') + ' -m "' + commitMessage + '"', function(err, stdout, stderr) {
-          if (err) {
-            grunt.fatal('Can not create the commit:\n  ' + stderr);
-          }
-          grunt.log.ok('Committed as "' + commitMessage + '"');
-          next();
-        });
-      });
+      // default to git
+      var execCmd = 'git commit ' + opts.commitFiles.join(' ') + ' -m "' + commitMessage + '"';
+      var fatalMsg = 'Can not create the commit:\n  ';
 
-      runIf(opts.vcs === 'hg', function() {
+      // check if hg
+      if(opts.vcs === 'hg') {
+        execCmd = 'hg commit -m "' + commitMessage + '"' + opts.commitFiles.join(' ');
+
         // support git tag -a for all files in hg
         if (opts.commitFiles === '-a') {
           opts.commitFiles = '';
         }
+      }
 
-        exec('hg commit -m "' + commitMessage + '"' + opts.commitFiles.join(' '), function(err, stdout, stderr) {
-          if (err) {
-            grunt.fatal('Can not create the commit:\n  ' + stderr);
-          }
-          grunt.log.ok('Committed as "' + commitMessage + '"');
-          next();
-        });
+      exec(execCmd, function(err, stdout, stderr) {
+        if (err) {
+          grunt.fatal(fatalMsg + stderr);
+        }
+        grunt.log.ok('Committed as "' + commitMessage + '"');
+        next();
       });
     });
 
@@ -188,48 +184,43 @@ module.exports = function(grunt) {
       var tagName = opts.tagName.replace('%VERSION%', globalVersion);
       var tagMessage = opts.tagMessage.replace('%VERSION%', globalVersion);
 
-      runIf(opts.vcs === 'git', function() {
-        exec('git tag -a ' + tagName + ' -m "' + tagMessage + '"' , function(err, stdout, stderr) {
-          if (err) {
-            grunt.fatal('Can not create the tag:\n  ' + stderr);
-          }
-          grunt.log.ok('Tagged as "' + tagName + '"');
-          next();
-        });
-      });
+      // default to git
+      var execCmd = 'git tag -a ' + tagName + ' -m "' + tagMessage + '"';
+      var fatalMsg = 'Can not create the tag:\n  ';
 
-      runIf(opts.vcs === 'hg', function () {
-        exec('hg tag ' + tagName + ' -m "' + tagMessage + '"' , function(err, stdout, stderr) {
-          if (err) {
-            grunt.fatal('Can not create the tag:\n  ' + stderr);
-          }
-          grunt.log.ok('Tagged as "' + tagName + '"');
-          next();
-        });
+      // check if hg
+      if(opts.vcs === 'hg') {
+        execCmd = 'hg tag ' + tagName + ' -m "' + tagMessage + '"';
+      }
+
+      exec(execCmd, function(err, stdout, stderr) {
+        if (err) {
+          grunt.fatal(fatalMsg + stderr);
+        }
+        grunt.log.ok('Tagged as "' + tagName + '"');
+        next();
       });
     });
 
 
     // PUSH CHANGES
     runIf(opts.push, function() {
-      runIf(opts.vcs === 'git', function() {
-        exec('git push ' + opts.pushTo + ' && git push ' + opts.pushTo + ' --tags', function(err, stdout, stderr) {
-          if (err) {
-            grunt.fatal('Can not push to ' + opts.pushTo + ':\n  ' + stderr);
-          }
-          grunt.log.ok('Pushed to ' + opts.pushTo);
-          next();
-        });
-      });
 
-      runIf(opts.vcs === 'hg', function() {
-        exec('hg push ' + opts.pushTo, function(err, stdout, stderr) {
-          if (err) {
-            grunt.fatal('Can not push to ' + opts.pushTo + ':\n  ' + stderr);
-          }
-          grunt.log.ok('Pushed to ' + opts.pushTo);
-          next();
-        });
+      // default to git
+      var execCmd = 'git push ' + opts.pushTo + ' && git push ' + opts.pushTo + ' --tags';
+      var fatalMsg = 'Can not push to ' + opts.pushTo + ':\n  ';
+
+      // check if hg
+      if(opts.vcs === 'hg') {
+        execCmd = 'hg push ' + opts.pushTo;
+      }
+
+      exec(execCmd, function(err, stdout, stderr) {
+        if (err) {
+          grunt.fatal(fatalMsg + stderr);
+        }
+        grunt.log.ok('Pushed to ' + opts.pushTo);
+        next();
       });
     });
 
