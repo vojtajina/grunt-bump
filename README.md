@@ -29,6 +29,7 @@ grunt.initConfig({
       commit: true,
       commitMessage: 'Release v%VERSION%',
       commitFiles: ['package.json'],
+      addUntrackedFiles: false,
       createTag: true,
       tagName: 'v%VERSION%',
       tagMessage: 'Version %VERSION%',
@@ -78,6 +79,13 @@ Type: `Array`
 Default value: `['package.json']`
 
 An array of files that you want to commit. You can use `['-a']` to commit all files.
+
+#### options.addUntrackedFiles
+Type: `Boolean`
+Default value: `false`
+
+Stages all files (untracked as well) listed in `options.commitFiles`.  
+**Note:** This will not work if using `['-a']` for `options.commitFiles`.
 
 #### options.createTag
 Type: `Boolean`
