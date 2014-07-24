@@ -143,13 +143,29 @@ module.exports = function(grunt) {
 
     // ADD UNTRACKED FILES
     runIf(opts.addUntrackedFiles && filesToCommit.trim() !== '-a', function() {
-      exec('git add ' + opts.commitFiles.join(' '), function(err, stdout, stderr) {
+      exec('git ls-files ' + filesToCommit + ' --exclude-standard --others', function(err, stdout, stderr) {
         if (err) {
-          grunt.fatal('Can not add files:\n  ' + stderr);
+          grunt.fatal('Can not ls-files:\n  ' + stderr);
         }
-        grunt.log.ok('Files added.');
-        next();
+
+        var addedFiles = stdout.trim();
+
+        if (addedFiles) {
+          exec('git add ' + addedFiles.replace(/\n/g, ' '), function(err, stdout, stderr) {
+            if (err) {
+              grunt.fatal('Can not add files:\n  ' + stderr);
+            }
+
+            grunt.log.ok('New files added:');
+            grunt.log.write(addedFiles + '\n');
+
+            next();
+          });
+        } else {
+          next();
+        }
       });
+
     });
 
     // COMMIT
