@@ -26,7 +26,10 @@
     "cattail <zhongchiyu@gmail.com>",
     "ylesaout <ylesaout@gmail.com>"
   ],
-  "repository": "vojtajina/grunt-bump",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/vojtajina/grunt-bump.git"
+  },
   "bugs": {
     "url": "https://github.com/vojtajina/grunt-bump/issues"
   },
