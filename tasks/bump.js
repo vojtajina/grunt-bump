@@ -33,7 +33,8 @@ module.exports = function(grunt) {
       tagMessage: 'Version %VERSION%',
       push: true,
       pushTo: 'upstream',
-      gitDescribeOptions: '--tags --always --abbrev=1 --dirty=-d'
+      gitDescribeOptions: '--tags --always --abbrev=1 --dirty=-d',
+      vcs: 'git'
     });
 
     if (incOrCommitOnly === 'bump-only') {
@@ -52,7 +53,7 @@ module.exports = function(grunt) {
 
     var exactVersionToSet = grunt.option('setversion');
     if (!semver.valid(exactVersionToSet)) {
-        exactVersionToSet = false;
+      exactVersionToSet = false;
     }
 
     var done = this.async();
@@ -74,15 +75,26 @@ module.exports = function(grunt) {
     var VERSION_REGEXP = /([\'|\"]?version[\'|\"]?[ ]*:[ ]*[\'|\"]?)([\d||A-a|.|-]*)([\'|\"]?)/i;
 
 
-    // GET VERSION FROM GIT
-    runIf(opts.bumpVersion && versionType === 'git', function(){
-      exec('git describe ' + opts.gitDescribeOptions, function(err, stdout, stderr){
+    // GET VERSION
+    runIf(opts.bumpVersion, function(){
+      // default to git
+      var execCmd = 'git describe ' + opts.gitDescribeOptions;
+      var fatalMsg = 'Can not get a version number using `git describe`';
+
+      // check if hg
+      if (opts.vcs === 'hg') {
+        execCmd = 'hg id -i';
+        fatalMsg = 'Can not get a version number using `hg id`';
+      }
+
+      exec(execCmd, function(err, stdout, stderr){
         if (err) {
-          grunt.fatal('Can not get a version number using `git describe`');
+          grunt.fatal(fatalMsg);
         }
         gitVersion = stdout.trim();
         next();
       });
+
     });
 
 
@@ -143,9 +155,23 @@ module.exports = function(grunt) {
     runIf(opts.commit, function() {
       var commitMessage = opts.commitMessage.replace('%VERSION%', globalVersion);
 
-      exec('git commit ' + opts.commitFiles.join(' ') + ' -m "' + commitMessage + '"', function(err, stdout, stderr) {
+      // default to git
+      var execCmd = 'git commit ' + opts.commitFiles.join(' ') + ' -m "' + commitMessage + '"';
+      var fatalMsg = 'Can not create the commit:\n  ';
+
+      // check if hg
+      if(opts.vcs === 'hg') {
+        execCmd = 'hg commit -m "' + commitMessage + '"' + opts.commitFiles.join(' ');
+
+        // support git tag -a for all files in hg
+        if (opts.commitFiles === '-a') {
+          opts.commitFiles = '';
+        }
+      }
+
+      exec(execCmd, function(err, stdout, stderr) {
         if (err) {
-          grunt.fatal('Can not create the commit:\n  ' + stderr);
+          grunt.fatal(fatalMsg + stderr);
         }
         grunt.log.ok('Committed as "' + commitMessage + '"');
         next();
@@ -158,9 +184,18 @@ module.exports = function(grunt) {
       var tagName = opts.tagName.replace('%VERSION%', globalVersion);
       var tagMessage = opts.tagMessage.replace('%VERSION%', globalVersion);
 
-      exec('git tag -a ' + tagName + ' -m "' + tagMessage + '"' , function(err, stdout, stderr) {
+      // default to git
+      var execCmd = 'git tag -a ' + tagName + ' -m "' + tagMessage + '"';
+      var fatalMsg = 'Can not create the tag:\n  ';
+
+      // check if hg
+      if(opts.vcs === 'hg') {
+        execCmd = 'hg tag ' + tagName + ' -m "' + tagMessage + '"';
+      }
+
+      exec(execCmd, function(err, stdout, stderr) {
         if (err) {
-          grunt.fatal('Can not create the tag:\n  ' + stderr);
+          grunt.fatal(fatalMsg + stderr);
         }
         grunt.log.ok('Tagged as "' + tagName + '"');
         next();
@@ -170,9 +205,19 @@ module.exports = function(grunt) {
 
     // PUSH CHANGES
     runIf(opts.push, function() {
-      exec('git push ' + opts.pushTo + ' && git push ' + opts.pushTo + ' --tags', function(err, stdout, stderr) {
+
+      // default to git
+      var execCmd = 'git push ' + opts.pushTo + ' && git push ' + opts.pushTo + ' --tags';
+      var fatalMsg = 'Can not push to ' + opts.pushTo + ':\n  ';
+
+      // check if hg
+      if(opts.vcs === 'hg') {
+        execCmd = 'hg push ' + opts.pushTo;
+      }
+
+      exec(execCmd, function(err, stdout, stderr) {
         if (err) {
-          grunt.fatal('Can not push to ' + opts.pushTo + ':\n  ' + stderr);
+          grunt.fatal(fatalMsg + stderr);
         }
         grunt.log.ok('Pushed to ' + opts.pushTo);
         next();
