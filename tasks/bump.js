@@ -33,6 +33,7 @@ module.exports = function(grunt) {
       tagMessage: 'Version %VERSION%',
       push: true,
       pushTo: 'upstream',
+      skipPrecommitHook: false,
       gitDescribeOptions: '--tags --always --abbrev=1 --dirty=-d'
     });
 
@@ -143,7 +144,7 @@ module.exports = function(grunt) {
     runIf(opts.commit, function() {
       var commitMessage = opts.commitMessage.replace('%VERSION%', globalVersion);
 
-      exec('git commit ' + opts.commitFiles.join(' ') + ' -m "' + commitMessage + '"', function(err, stdout, stderr) {
+      exec('git commit ' + opts.commitFiles.join(' ') + (opts.skipPrecommitHook ? ' -n ' : '') + ' -m "' + commitMessage + '"', function(err, stdout, stderr) {
         if (err) {
           grunt.fatal('Can not create the commit:\n  ' + stderr);
         }

@@ -67,6 +67,12 @@ Default value: `true`
 
 Should the changes be committed? False if you want to do additional things.
 
+#### options.skipPrecommitHook
+Type: `Boolean`
+Default value: `false`
+
+Enable this if you would like to ignore pre-commit git-hooks.
+
 #### options.commitMessage
 Type: `String`
 Default value: `Release v%VERSION%`
