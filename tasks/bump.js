@@ -20,7 +20,7 @@ var exec = require('child_process').exec;
 module.exports = function(grunt) {
 
   var DESC = 'Increment the version, commit, tag and push.';
-  grunt.registerTask('bump', DESC, function(versionType, incOrCommitOnly) {
+  grunt.registerMultiTask('bump', DESC, function(versionType, incOrCommitOnly) {
     var opts = this.options({
       bumpVersion: true,
       files: ['package.json'],
