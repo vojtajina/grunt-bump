@@ -1,7 +1,7 @@
 {
   "name": "grunt-bump",
   "description": "Bump package version",
-  "version": "0.0.14",
+  "version": "0.0.15",
   "homepage": "https://github.com/vojtajina/grunt-bump",
   "author": {
     "name": "Vojta Jína",
@@ -16,6 +16,7 @@
     "travis4all <travis4all@diamon.dz>",
     "Adam Biggs <adam.biggs@lightmaker.com>",
     "Gavin <gavin@kodekoan.com>",
+    "Jarrett Drouillard <jarrett@thestyl.us>",
     "Mathias Paumgarten <mail@mathias-paumgarten.com>",
     "Mayhem <stepien.nicolas@gmail.com>",
     "Michael Hellein <themichaek@gmail.com>",
@@ -26,7 +27,10 @@
     "cattail <zhongchiyu@gmail.com>",
     "ylesaout <ylesaout@gmail.com>"
   ],
-  "repository": "vojtajina/grunt-bump",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/vojtajina/grunt-bump.git"
+  },
   "bugs": {
     "url": "https://github.com/vojtajina/grunt-bump/issues"
   },
