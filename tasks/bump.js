@@ -100,8 +100,10 @@ module.exports = function(grunt) {
         if (file === 'config.xml') {
           parseString(fileString, function (err, result) {
             result.widget.$.version = result.widget.$.version.replace(XML_VERSION_REGEXP, function (match, parsedVersion) {
-                version = exactVersionToSet || semver.inc(parsedVersion, versionType || 'patch');
-                return version;
+                gitVersion = gitVersion && parsedVersion;
+                version = exactVersionToSet || gitVersion || semver.inc(parsedVersion, versionType || 'patch');
+                // Removes prerelease tag
+                return version.slice(0, version.indexOf('-'));
             });
             content = xmlBuilder.buildObject(result);
           });
