@@ -16,6 +16,9 @@
 
 var semver = require('semver');
 var exec = require('child_process').exec;
+var xml2js = require('xml2js');
+var parseString = xml2js.parseString;
+var xmlBuilder = new xml2js.Builder();
 
 module.exports = function(grunt) {
 
@@ -71,6 +74,7 @@ module.exports = function(grunt) {
 
     var globalVersion; // when bumping multiple files
     var gitVersion;    // when bumping using `git describe`
+    var XML_VERSION_REGEXP = /([\d||A-a|.|-]*)([\'|\"]?)/i;
     var VERSION_REGEXP = /([\'|\"]?version[\'|\"]?[ ]*:[ ]*[\'|\"]?)([\d||A-a|.|-]*)([\'|\"]?)/i;
 
 
@@ -90,11 +94,26 @@ module.exports = function(grunt) {
     runIf(opts.bumpVersion, function(){
       grunt.file.expand(opts.files).forEach(function(file, idx) {
         var version = null;
-        var content = grunt.file.read(file).replace(VERSION_REGEXP, function(match, prefix, parsedVersion, suffix) {
-          gitVersion = gitVersion && parsedVersion + '-' + gitVersion;
-          version = exactVersionToSet || gitVersion || semver.inc(parsedVersion, versionType || 'patch');
-          return prefix + version + suffix;
-        });
+        var fileString = grunt.file.read(file);
+        var content;
+
+        if (file === 'config.xml') {
+          parseString(fileString, function (err, result) {
+            result.widget.$.version = result.widget.$.version.replace(XML_VERSION_REGEXP, function (match, parsedVersion) {
+                gitVersion = gitVersion && parsedVersion;
+                version = exactVersionToSet || gitVersion || semver.inc(parsedVersion, versionType || 'patch');
+                // Removes prerelease tag
+                return version.slice(0, version.indexOf('-'));
+            });
+            content = xmlBuilder.buildObject(result);
+          });
+        } else {
+          content = fileString.replace(VERSION_REGEXP, function(match, prefix, parsedVersion, suffix) {
+            gitVersion = gitVersion && parsedVersion + '-' + gitVersion;
+            version = exactVersionToSet || gitVersion || semver.inc(parsedVersion, versionType || 'patch');
+            return prefix + version + suffix;
+          });
+        }
 
         if (!version) {
           grunt.fatal('Can not find a version to bump in ' + file);

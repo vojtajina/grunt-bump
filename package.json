@@ -43,7 +43,8 @@
   },
   "license": "MIT",
   "dependencies": {
-    "semver": "~2.3.0"
+    "semver": "~2.3.0",
+    "xml2js": "^0.4.4"
   },
   "peerDependencies": {
     "grunt": ">=0.4.0"
