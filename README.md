@@ -34,7 +34,8 @@ grunt.initConfig({
       tagMessage: 'Version %VERSION%',
       push: true,
       pushTo: 'upstream',
-      gitDescribeOptions: '--tags --always --abbrev=1 --dirty=-d'
+      gitDescribeOptions: '--tags --always --abbrev=1 --dirty=-d',
+      globalReplace: false
     }
   },
 })
@@ -115,6 +116,11 @@ Default value: `--tags --always --abbrev=1 --dirty=-d`
 
 Options to use with `$ git describe`
 
+#### options.globalReplace
+Type: `Boolean`
+Default value: `false`
+
+Replace all occurrences of the version in the file. When set to `false`, only the first occurrence will be replaced.
 
 ### Usage Examples
 
