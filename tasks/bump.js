@@ -33,7 +33,8 @@ module.exports = function(grunt) {
       tagMessage: 'Version %VERSION%',
       push: true,
       pushTo: 'upstream',
-      gitDescribeOptions: '--tags --always --abbrev=1 --dirty=-d'
+      gitDescribeOptions: '--tags --always --abbrev=1 --dirty=-d',
+      globalReplace: false
     });
 
     if (incOrCommitOnly === 'bump-only') {
@@ -72,6 +73,12 @@ module.exports = function(grunt) {
     var globalVersion; // when bumping multiple files
     var gitVersion;    // when bumping using `git describe`
     var VERSION_REGEXP = /([\'|\"]?version[\'|\"]?[ ]*:[ ]*[\'|\"]?)([\d||A-a|.|-]*)([\'|\"]?)/i;
+
+
+    if (opts.globalReplace) {
+      // Redefine the regular expression with the _g_lobal flag in addition to the _i_gnore flag.
+      VERSION_REGEXP = new RegExp(VERSION_REGEXP.source, 'gi');
+    }
 
 
     // GET VERSION FROM GIT
@@ -127,7 +134,7 @@ module.exports = function(grunt) {
     });
 
 
-    // when only commiting, read the version from package.json / pkg config
+    // when only committing, read the version from package.json / pkg config
     runIf(!opts.bumpVersion, function() {
       if (opts.updateConfigs.length) {
         globalVersion = grunt.config(opts.updateConfigs[0]).version;
