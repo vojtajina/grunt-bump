@@ -10,7 +10,7 @@
 These rules are adopted from the AngularJS project with the exception that the scope part is optional.
 
 ### Commit Message Format
-Each commit message consists of a **header**, a **body** and a **footer**.  The header has a special
+Each commit message consists of a **header**, a **body** and a **footer**. The header has a special
 format that includes a **type**, a **scope** and a **subject**:
 
 ```
@@ -31,7 +31,7 @@ Must be one of the following:
 * **fix**: A bug fix
 * **docs**: Documentation only changes
 * **style**: Changes that do not affect the meaning of the code (white-space, formatting, missing
-  semi-colons, etc)
+  semicolons, etc.)
 * **refactor**: A code change that neither fixes a bug or adds a feature
 * **test**: Adding missing tests
 * **chore**: Changes to the build process or auxiliary tools and libraries such as documentation
@@ -39,7 +39,7 @@ Must be one of the following:
 
 ### Scope
 The scope could be anything specifying place of the commit change. For example `app`,
-`gen`, `docs`, `gen:view`, `gen:route`, `gen:service`, etc...
+`gen`, `docs`, `gen:view`, `gen:route`, `gen:service`, etc.
 
 ### Subject
 The subject contains succinct description of the change:
@@ -48,11 +48,10 @@ The subject contains succinct description of the change:
 * don't capitalize first letter
 * no dot (.) at the end
 
-###Body
-Just as in the **subject**, use the imperative, present tense: "change" not "changed" nor "changes"
-The body should include the motivation for the change and contrast this with previous behavior.
+### Body
+Just as in the **subject**, use the imperative, present tense: "change" not "changed" nor "changes." The body should include the motivation for the change and contrast this with previous behavior.
 
-###Footer
+### Footer
 The footer should contain any information about **Breaking Changes** and is also the place to
 reference GitHub issues that this commit **Closes**.
 

@@ -46,7 +46,7 @@ grunt.initConfig({
 Type: `Array`
 Default value: `['package.json']`
 
-Maybe you wanna bump 'component.json' instead? Or maybe both: `['package.json', 'component.json']`? Can be either a list of files to bump (an array of files) or a grunt glob ( eg: `['*.json']` ).
+Maybe you wanna bump 'component.json' instead? Or maybe both: `['package.json', 'component.json']`? Can be either a list of files to bump (an array of files) or a grunt glob (e.g., `['*.json']`).
 
 #### options.updateConfigs
 Type: `Array`
@@ -174,7 +174,7 @@ $ grunt bump --setversion=2.0.1
 >> Pushed to origin
 ```
 
-Sometimes you want to run another task between bumping the version and commiting, for instance generate changelog. You can use `bump-only` and `bump-commit` to achieve that:
+Sometimes you want to run another task between bumping the version and committing, for instance generate changelog. You can use `bump-only` and `bump-commit` to achieve that:
 
 ```bash
 $ grunt bump-only:minor
@@ -183,7 +183,7 @@ $ grunt bump-commit
 ```
 
 ## Contributing
-See the [contributing guide](https://github.com/vojtajina/grunt-bump/blob/master/CONTRIBUTING.md) for more information. In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/): `grunt test jshint`.
+See the [contributing guide](https://github.com/vojtajina/grunt-bump/blob/master/CONTRIBUTING.md) for more information. In lieu of a formal style guide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/): `grunt test jshint`.
 
 ## License
 Copyright (c) 2014 Vojta Jína. Licensed under the MIT license.
