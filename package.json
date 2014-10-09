@@ -46,7 +46,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "semver": "~2.3.0"
+    "semver": "git+ssh://git@github.com:bromanko/node-semver.git#prerelease-identifier"
   },
   "peerDependencies": {
     "grunt": ">=0.4.0"
