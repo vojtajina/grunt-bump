@@ -11,13 +11,20 @@ module.exports = (grunt) ->
     clean: tests: ['tmp']
     nodeunit: tests: ['test/test_*.js']
 
+    mochaTest:
+      test:
+        options:
+          reporter: 'spec',
+        src: ['test/**/*.js']
+
+
     'auto-release': options: checkTravisBuild: false
     'npm-contributors': options: commitMessage: 'chore: update contributors'
 
   # Actually load this plugin's task. Mainly for testing
   grunt.loadTasks('tasks')
 
-  grunt.registerTask 'test', ['clean', 'jshint:test', 'nodeunit']
+  grunt.registerTask 'test', ['clean', 'mochaTest']
 
   grunt.registerTask 'default', ['jshint:task']
 
