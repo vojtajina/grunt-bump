@@ -65,3 +65,37 @@ describe('tasks', function(){
         });
     });
 });
+
+describe('git versioning',function(){
+    /**
+     * Because of the nature of working with git, we are testing against
+     * against the real repo's git information
+     */
+
+    var versionRegex;
+
+    before(cleanFile);
+    before(function(){
+        var pkg = grunt.file.readJSON('package.json');
+        var currentVersion = pkg.version;
+        var gitVersionRegExp = '^v' + currentVersion.replace(/\./g, '\\.') + '-[0-9]{1}-g[0-9a-f]{4,5}-d$';
+        versionRegex = new RegExp( gitVersionRegExp, 'i');
+    });
+    after(cleanFile);
+
+    it('should make a git version', function(done){
+        grunt.util.spawn({ grunt: true, args: ['bump-only:git', '--gruntfile=test/data/Gruntfile.coffee']}, function() {
+            var testPkg = grunt.file.readJSON(testFile);
+            var setVersion = testPkg.version;
+            expect(versionRegex.test(setVersion)).to.equal(true);
+            //Now test a second time and make sure the version is identical
+            grunt.util.spawn({ grunt: true, args: ['bump-only:git', '--gruntfile=test/data/Gruntfile.coffee']}, function() {
+                var testPkgAgain = grunt.file.readJSON(testFile);
+                expect(versionRegex.test(testPkgAgain.version)).to.equal(true);
+                expect(setVersion).to.equal(testPkgAgain.version);
+                done();
+            });
+        });
+    });
+
+});
