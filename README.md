@@ -41,6 +41,8 @@ grunt.initConfig({
 })
 ```
 
+You may want to change them to match your remote repository, e.g. `pushTo` might be `origin` instead of `upstream` in your case.
+
 ### Options
 
 #### options.files
