@@ -49,6 +49,8 @@ Default value: `['package.json']`
 
 Maybe you wanna bump 'component.json' instead? Or maybe both: `['package.json', 'component.json']`? Can be either a list of files to bump (an array of files) or a grunt glob (e.g., `['*.json']`).
 
+Grunt-bump will scan these files searching for instances of the version-\<separator\>-\<value\> pattern where _version_ is case-insensitive, _separator_ can be either colon or equals sign and _value_ is a string following the [semantic versioning](http://semver.org) convention.  The fact the equals sign is also supported means you are not limited only to JSON files but you can use other file formats to bump versions as well.
+
 #### options.updateConfigs
 Type: `Array`
 Default value: `[]`
