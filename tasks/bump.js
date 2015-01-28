@@ -98,8 +98,8 @@ module.exports = function(grunt) {
       grunt.file.expand(opts.files).forEach(function(file, idx) {
         var version = null;
         var content = grunt.file.read(file).replace(VERSION_REGEXP, function(match, prefix, parsedVersion, suffix) {
-          gitVersion = gitVersion && parsedVersion + '-' + gitVersion;
-          version = exactVersionToSet || gitVersion || semver.inc(parsedVersion, versionType || 'patch');
+          var fileGitVersion = gitVersion && parsedVersion + '-' + gitVersion;
+          version = exactVersionToSet || fileGitVersion || semver.inc(parsedVersion, versionType || 'patch');
           return prefix + version + suffix;
         });
 
