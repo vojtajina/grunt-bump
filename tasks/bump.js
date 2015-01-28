@@ -28,6 +28,7 @@ module.exports = function(grunt) {
       commit: true,
       commitMessage: 'Release v%VERSION%',
       commitFiles: ['package.json'], // '-a' for all files
+      addUntrackedFiles: false,
       createTag: true,
       tagName: 'v%VERSION%',
       tagMessage: 'Version %VERSION%',
@@ -73,6 +74,7 @@ module.exports = function(grunt) {
     var globalVersion; // when bumping multiple files
     var gitVersion;    // when bumping using `git describe`
     var VERSION_REGEXP = /([\'|\"]?version[\'|\"]?[ ]*:[ ]*[\'|\"]?)([\d||A-a|.|-]*)([\'|\"]?)/i;
+    var filesToCommit = opts.commitFiles.join(' ');
 
 
     if (opts.globalReplace) {
@@ -146,11 +148,38 @@ module.exports = function(grunt) {
     });
 
 
+    // ADD UNTRACKED FILES
+    runIf(opts.addUntrackedFiles && filesToCommit.trim() !== '-a', function() {
+      exec('git ls-files ' + filesToCommit + ' --exclude-standard --others', function(err, stdout, stderr) {
+        if (err) {
+          grunt.fatal('Can not ls-files:\n  ' + stderr);
+        }
+
+        var addedFiles = stdout.trim();
+
+        if (addedFiles) {
+          exec('git add ' + addedFiles.replace(/\n/g, ' '), function(err, stdout, stderr) {
+            if (err) {
+              grunt.fatal('Can not add files:\n  ' + stderr);
+            }
+
+            grunt.log.ok('New files added:');
+            grunt.log.write(addedFiles + '\n');
+
+            next();
+          });
+        } else {
+          next();
+        }
+      });
+
+    });
+
     // COMMIT
     runIf(opts.commit, function() {
       var commitMessage = opts.commitMessage.replace('%VERSION%', globalVersion);
 
-      exec('git commit ' + opts.commitFiles.join(' ') + ' -m "' + commitMessage + '"', function(err, stdout, stderr) {
+      exec('git commit ' + filesToCommit + ' -m "' + commitMessage + '"', function(err, stdout, stderr) {
         if (err) {
           grunt.fatal('Can not create the commit:\n  ' + stderr);
         }
