@@ -150,12 +150,21 @@ module.exports = function(grunt) {
     runIf(opts.commit, function() {
       var commitMessage = opts.commitMessage.replace('%VERSION%', globalVersion);
 
-      exec('git commit ' + opts.commitFiles.join(' ') + ' -m "' + commitMessage + '"', function(err, stdout, stderr) {
+      var force = opts.commitForceAdd ? ' -f' : '';
+
+      exec('git add ' + opts.commitFiles.join(' ') + force, function(err, stdout, stderr) {
         if (err) {
-          grunt.fatal('Can not create the commit:\n  ' + stderr);
+          grunt.fatal('Can not add files for commit:\n  ' + stderr);
         }
-        grunt.log.ok('Committed as "' + commitMessage + '"');
-        next();
+        grunt.log.ok('Files added for commit');
+
+        exec('git commit -m "' + commitMessage + '"', function(err, stdout, stderr) {
+          if (err) {
+            grunt.fatal('Can not create the commit:\n  ' + stderr);
+          }
+          grunt.log.ok('Committed as "' + commitMessage + '"');
+          next();
+        });
       });
     });
 
