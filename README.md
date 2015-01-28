@@ -174,6 +174,19 @@ $ grunt bump --setversion=2.0.1
 >> Pushed to origin
 ```
 
+If you want to append commit message content, you can use the ```commitmsg``` tag in the command line.
+
+```bash
+$ grunt bump --commitmsg="Some notes about this commit"
+>> Version bumped to 2.0.1
+>> Committed as "Release v2.0.1 - Some notes about this commit"
+>> Tagged as "v2.0.1"
+>> Pushed to origin
+```
+
+
+
+
 Sometimes you want to run another task between bumping the version and committing, for instance generate changelog. You can use `bump-only` and `bump-commit` to achieve that:
 
 ```bash
