@@ -157,12 +157,6 @@ $ grunt bump:prerelease
 >> Tagged as "v1.0.0-1"
 >> Pushed to origin
 
-$ grunt bump:patch
->> Version bumped to 1.0.1
->> Committed as "Release v1.0.1"
->> Tagged as "v1.0.1"
->> Pushed to origin
-
 $ grunt bump:git
 >> Version bumped to 1.0.1-ge96c
 >> Committed as "Release v1.0.1-ge96c"
