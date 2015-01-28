@@ -69,10 +69,13 @@ module.exports = function(grunt) {
         queue.push(behavior);
       }
     };
+    var versionWithGit = function(parsedVersion, gitVersion) {
+      return gitVersion && parsedVersion.replace(/(\+\w+)|$/, '+' + gitVersion);
+    }
 
     var globalVersion; // when bumping multiple files
     var gitVersion;    // when bumping using `git describe`
-    var VERSION_REGEXP = /([\'|\"]?version[\'|\"]?[ ]*:[ ]*[\'|\"]?)([\d||A-a|.|-]*)([\'|\"]?)/i;
+    var VERSION_REGEXP = /([\'|\"]?version[\'|\"]?[ ]*:[ ]*[\'|\"]?)([\d||A-a|.|\-|+\w]*)([\'|\"]?)/i;
 
 
     if (opts.globalReplace) {
@@ -98,8 +101,7 @@ module.exports = function(grunt) {
       grunt.file.expand(opts.files).forEach(function(file, idx) {
         var version = null;
         var content = grunt.file.read(file).replace(VERSION_REGEXP, function(match, prefix, parsedVersion, suffix) {
-          gitVersion = gitVersion && parsedVersion + '-' + gitVersion;
-          version = exactVersionToSet || gitVersion || semver.inc(parsedVersion, versionType || 'patch');
+          version = exactVersionToSet || versionWithGit(parsedVersion, gitVersion) || semver.inc(parsedVersion, versionType || 'patch');
           return prefix + version + suffix;
         });
 
