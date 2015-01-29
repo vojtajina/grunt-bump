@@ -11,8 +11,9 @@ module.exports = (grunt) ->
     clean: tests: ['tmp']
     nodeunit: tests: ['test/test_*.js']
 
+    bump: options: commitFiles: [ 'package.json', 'CHANGELOG.md' ]
     'auto-release': options: checkTravisBuild: false
-    'npm-contributors': options: commitMessage: 'chore: update contributors'
+    'npm-contributors': options: commit: false
 
   # Actually load this plugin's task. Mainly for testing
   grunt.loadTasks('tasks')
@@ -24,6 +25,8 @@ module.exports = (grunt) ->
   grunt.registerTask 'release', 'Build, bump and publish to NPM.', (type) ->
     grunt.task.run [
       'npm-contributors'
-      "bump:#{type||'patch'}"
+      "bump-only:#{type or 'patch'}"
+      'changelog'
+      'bump-commit'
       'npm-publish'
     ]
