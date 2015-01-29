@@ -13,7 +13,9 @@ module.exports = (grunt) ->
 
     bump: options: commitFiles: [ 'package.json', 'CHANGELOG.md' ]
     'auto-release': options: checkTravisBuild: false
-    'npm-contributors': options: commit: false
+    'npm-contributors': options:
+      commit: false
+      commitMessage: 'chore: update contributors'
 
   # Actually load this plugin's task. Mainly for testing
   grunt.loadTasks('tasks')
