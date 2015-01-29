@@ -56,6 +56,16 @@ module.exports = function(grunt) {
         exactVersionToSet = false;
     }
 
+
+    //Use: --commitmsg="add me to commit message"
+    var appendToCommitMessage = grunt.option('commitmsg');
+    if ( !appendToCommitMessage || appendToCommitMessage.length == 0 ) {
+        appendToCommitMessage = '';
+    } else {
+      appendToCommitMessage = ' - '.concat(appendToCommitMessage);
+    }
+
+
     var done = this.async();
     var queue = [];
     var next = function() {
@@ -148,7 +158,7 @@ module.exports = function(grunt) {
 
     // COMMIT
     runIf(opts.commit, function() {
-      var commitMessage = opts.commitMessage.replace('%VERSION%', globalVersion);
+      var commitMessage = opts.commitMessage.replace('%VERSION%', globalVersion) + appendToCommitMessage;
 
       exec('git commit ' + opts.commitFiles.join(' ') + ' -m "' + commitMessage + '"', function(err, stdout, stderr) {
         if (err) {
@@ -176,7 +186,7 @@ module.exports = function(grunt) {
 
 
     // PUSH CHANGES
-    runIf(opts.push, function() {
+    runIf( opts.push, function() {
       exec('git push ' + opts.pushTo + ' && git push ' + opts.pushTo + ' --tags', function(err, stdout, stderr) {
         if (err) {
           grunt.fatal('Can not push to ' + opts.pushTo + ':\n  ' + stderr);
