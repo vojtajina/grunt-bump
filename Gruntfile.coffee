@@ -11,7 +11,9 @@ module.exports = (grunt) ->
     clean: tests: ['tmp']
     nodeunit: tests: ['test/test_*.js']
 
-    bump: options: commitFiles: [ 'package.json', 'CHANGELOG.md' ]
+    bump: options:
+      commitFiles: [ 'package.json', 'CHANGELOG.md' ]
+      commitMessage: 'chore: Release v%VERSION%'
     'auto-release': options: checkTravisBuild: false
     'npm-contributors': options:
       commit: false
