@@ -190,6 +190,21 @@ $ grunt changelog
 $ grunt bump-commit
 ```
 
+If you want to try out your settings, you can use any of the above commands with the ```dry-run``` tag in the command line.
+With this tag specified there will be no changes, stages, commits or pushes.
+
+```bash
+$ grunt bump --dry-run
+Running "bump" task
+Running grunt-bump in dry mode!
+>> bump-dry: Version bumped to 1.0.1 (in package.json)
+>> bump-dry: git commit package.json -m "Release v1.0.1"
+>> bump-dry: git tag -a v1.0.1 -m "Version 1.0.1"
+>> bump-dry: git push origin && git push origin --tags
+```
+
+Since the tag is parsed and forwarded by grunt, it will also work if you pass it to a different task which then invokes bump.
+
 ## Contributing
 See the [contributing guide](https://github.com/vojtajina/grunt-bump/blob/master/CONTRIBUTING.md) for more information. In lieu of a formal style guide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/): `grunt test jshint`.
 

@@ -37,6 +37,11 @@ module.exports = function(grunt) {
       globalReplace: false
     });
 
+    var DRY = grunt.option('dry-run');
+    if (DRY) {
+      grunt.log.writeln('Running grunt-bump in dry mode!');
+    }
+
     if (incOrCommitOnly === 'bump-only') {
       grunt.verbose.writeln('Only incrementing the version.');
 
@@ -53,7 +58,7 @@ module.exports = function(grunt) {
 
     var exactVersionToSet = grunt.option('setversion');
     if (!semver.valid(exactVersionToSet)) {
-        exactVersionToSet = false;
+      exactVersionToSet = false;
     }
 
     var done = this.async();
@@ -107,8 +112,13 @@ module.exports = function(grunt) {
           grunt.fatal('Can not find a version to bump in ' + file);
         }
 
-        grunt.file.write(file, content);
-        grunt.log.ok('Version bumped to ' + version + (opts.files.length > 1 ? ' (in ' + file + ')' : ''));
+        var logMsg = 'Version bumped to ' + version +  ' (in ' + file + ')';
+        if (!DRY){
+          grunt.file.write(file, content);
+          grunt.log.ok(logMsg);
+        } else {
+          grunt.log.ok('bump-dry: ' + logMsg);
+        }
 
         if (!globalVersion) {
           globalVersion = version;
@@ -149,14 +159,22 @@ module.exports = function(grunt) {
     // COMMIT
     runIf(opts.commit, function() {
       var commitMessage = opts.commitMessage.replace('%VERSION%', globalVersion);
+      var cmd = 'git commit ' + opts.commitFiles.join(' ') + ' -m "' + commitMessage + '"';
 
-      exec('git commit ' + opts.commitFiles.join(' ') + ' -m "' + commitMessage + '"', function(err, stdout, stderr) {
-        if (err) {
-          grunt.fatal('Can not create the commit:\n  ' + stderr);
-        }
-        grunt.log.ok('Committed as "' + commitMessage + '"');
+      if(DRY){
+        // since nothing has actually changed, running git commit with --dry-run
+        // will fail, so we just print the command instead
+        grunt.log.ok('bump-dry: ' + cmd);
         next();
-      });
+      } else {
+        exec(cmd, function(err, stdout, stderr) {
+          if (err) {
+            grunt.fatal('Can not create the commit:\n  ' + stderr);
+          }
+          grunt.log.ok('Committed as "' + commitMessage + '"');
+          next();
+        });
+      }
     });
 
 
@@ -165,25 +183,40 @@ module.exports = function(grunt) {
       var tagName = opts.tagName.replace('%VERSION%', globalVersion);
       var tagMessage = opts.tagMessage.replace('%VERSION%', globalVersion);
 
-      exec('git tag -a ' + tagName + ' -m "' + tagMessage + '"' , function(err, stdout, stderr) {
-        if (err) {
-          grunt.fatal('Can not create the tag:\n  ' + stderr);
-        }
-        grunt.log.ok('Tagged as "' + tagName + '"');
+      var cmd = 'git tag -a ' + tagName + ' -m "' + tagMessage + '"';
+      if (DRY) {
+        // cannot run git tag in dry mode so we just give the command as output.
+        grunt.log.ok('bump-dry: ' + cmd);
         next();
-      });
+      } else {
+        exec(cmd , function(err, stdout, stderr) {
+          if (err) {
+            grunt.fatal('Can not create the tag:\n  ' + stderr);
+          }
+          grunt.log.ok('Tagged as "' + tagName + '"');
+          next();
+        });
+      }
     });
 
 
     // PUSH CHANGES
     runIf(opts.push, function() {
-      exec('git push ' + opts.pushTo + ' && git push ' + opts.pushTo + ' --tags', function(err, stdout, stderr) {
-        if (err) {
-          grunt.fatal('Can not push to ' + opts.pushTo + ':\n  ' + stderr);
-        }
-        grunt.log.ok('Pushed to ' + opts.pushTo);
+      var cmd = 'git push ' + opts.pushTo + ' && git push ' + opts.pushTo + ' --tags';
+      if (DRY){
+        // since nothing has actually been comitted, running git push with --dry-run
+        // will fail, so we just print the command instead
+        grunt.log.ok('bump-dry: ' + cmd);
         next();
-      });
+      } else {
+        exec(cmd, function(err, stdout, stderr) {
+          if (err) {
+            grunt.fatal('Can not push to ' + opts.pushTo + ':\n  ' + stderr);
+          }
+          grunt.log.ok('Pushed to ' + opts.pushTo);
+          next();
+        });
+      }
     });
 
     next();
