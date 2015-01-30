@@ -1,3 +1,12 @@
+<a name="0.1.0"></a>
+## 0.1.0 (2015-01-30)
+
+
+#### Features
+
+* add dry-run feature ([10f5ecda](http://github.com/vojtajina/grunt-bump/commit/10f5ecdab375f6eb68e4d750be768f5f91208dea), closes [#89](http://github.com/vojtajina/grunt-bump/issues/89))
+
+
 <a name="0.0.17"></a>
 ### 0.0.17 (2015-01-28)
 
