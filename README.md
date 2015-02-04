@@ -182,6 +182,16 @@ $ grunt bump --setversion=2.0.1
 >> Pushed to origin
 ```
 
+If you want to specify an identifier for prerelease versions you can use the ```preid``` tag in the command line.
+
+```bash
+$ grunt bump:prerelease --preid dev
+>> Version bumped to 2.0.1-dev.0
+>> Committed as "Release v2.0.1-dev.0"
+>> Tagged as "v2.0.1-dev.0"
+>> Pushed to origin
+```
+
 Sometimes you want to run another task between bumping the version and committing, for instance generate changelog. You can use `bump-only` and `bump-commit` to achieve that:
 
 ```bash

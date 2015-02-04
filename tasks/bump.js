@@ -61,6 +61,8 @@ module.exports = function(grunt) {
       exactVersionToSet = false;
     }
 
+    var prereleaseIdentifier = grunt.option('preid');
+
     var done = this.async();
     var queue = [];
     var next = function() {
@@ -103,7 +105,7 @@ module.exports = function(grunt) {
         var version = null;
         var content = grunt.file.read(file).replace(VERSION_REGEXP, function(match, prefix, parsedVersion, suffix) {
           gitVersion = gitVersion && parsedVersion + '-' + gitVersion;
-          version = exactVersionToSet || gitVersion || semver.inc(parsedVersion, versionType || 'patch');
+          version = exactVersionToSet || gitVersion || semver.inc(parsedVersion, versionType || 'patch', false, prereleaseIdentifier);
           return prefix + version + suffix;
         });
 
