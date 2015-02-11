@@ -47,7 +47,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "semver": "~2.3.0"
+    "semver": "~4.2.2"
   },
   "peerDependencies": {
     "grunt": ">=0.4.0"
