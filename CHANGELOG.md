@@ -1,3 +1,12 @@
+<a name="0.2.0"></a>
+## 0.2.0 (2015-02-17)
+
+
+#### Features
+
+* add support for prereleases ([722373fc](http://github.com/vojtajina/grunt-bump/commit/722373fc3b4f80526dd0663a7ab43026417fa30e))
+
+
 <a name="0.1.0"></a>
 ## 0.1.0 (2015-01-30)
 
