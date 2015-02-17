@@ -36,6 +36,10 @@ module.exports = function(grunt) {
       gitDescribeOptions: '--tags --always --abbrev=1 --dirty=-d',
       globalReplace: false
     });
+    
+    if (opts.type && !versionType) {
+      versionType = opts.type;
+    }
 
     var dryRun = grunt.option('dry-run');
     if (dryRun) {
@@ -56,7 +60,7 @@ module.exports = function(grunt) {
       opts.bumpVersion = false;
     }
 
-    var exactVersionToSet = grunt.option('setversion');
+    var exactVersionToSet = grunt.option('setversion') || opts.version || '';
     if (!semver.valid(exactVersionToSet)) {
       exactVersionToSet = false;
     }
