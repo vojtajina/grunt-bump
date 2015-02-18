@@ -34,10 +34,10 @@ module.exports = function(grunt) {
       files: ['package.json'],
       gitDescribeOptions: '--tags --always --abbrev=1 --dirty=-d',
       globalReplace: false,
-      prereleaseName: null,
+      prereleaseName: false,
       push: true,
       pushTo: 'upstream',
-      regExp: null,
+      regExp: false,
       tagMessage: 'Version %VERSION%',
       tagName: 'v%VERSION%',
       updateConfigs: [] // array of config properties to update (with files)

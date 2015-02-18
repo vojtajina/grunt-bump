@@ -36,8 +36,8 @@ grunt.initConfig({
       pushTo: 'upstream',
       gitDescribeOptions: '--tags --always --abbrev=1 --dirty=-d',
       globalReplace: false,
-      prereleaseName: null,
-      regExp: null
+      prereleaseName: false,
+      regExp: false
     }
   },
 })
@@ -132,7 +132,7 @@ Default value: `rc`
 
 When bumping to a prerelease version this will be the identifier of the prerelease e.g. `dev`, `alpha`, `beta`, `rc` etc.
 1.0.0-`prereleaseName`.0
-When left as the default `null` version bump:prereleae will behave as follows:
+When left as the default `false` version bump:prereleae will behave as follows:
 * 1.0.0   to 1.0.1-0
 * 1.0.1-0 to 1.0.1-1
 * from a previous bump:git
@@ -140,7 +140,7 @@ When left as the default `null` version bump:prereleae will behave as follows:
 
 #### options.regExp
 Type: `RegExp`
-Default value: `null`
+Default value: `false`
 
 Regex to find and replace version string in files described in `options.files`. If no value is specified, it will use the plugin's default.
 
