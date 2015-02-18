@@ -109,7 +109,10 @@ module.exports = function(grunt) {
       grunt.file.expand(opts.files).forEach(function(file, idx) {
         var version = null;
         var content = grunt.file.read(file).replace(VERSION_REGEXP, function(match, prefix, parsedVersion, namedPre, noNamePre, suffix) {
-          version = exactVersionToSet || gitVersion || semver.inc(parsedVersion, versionType || 'patch', opts.prereleaseName);
+          var type = versionType === 'git' ? 'prerelease' : versionType;
+          version = exactVersionToSet || semver.inc(
+            parsedVersion, type || 'patch', gitVersion || opts.prereleaseName
+          );
           return prefix + version + suffix;
         });
 
