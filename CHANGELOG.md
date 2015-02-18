@@ -1,3 +1,18 @@
+<a name="0.3.0"></a>
+## 0.3.0 (2015-02-18)
+
+
+#### Bug Fixes
+
+* git bump now prepatchs correctly ([a2e06c1e](http://github.com/vojtajina/grunt-bump/commit/a2e06c1e1ea1cede536a86cdee0c38154e6bf8a4))
+
+
+#### Features
+
+* allow cli options as config options ([19532ad4](http://github.com/vojtajina/grunt-bump/commit/19532ad40176c1d19d3ed0fe5ec81a67c0294f2f))
+* support custom regexp ([2fe1e89d](http://github.com/vojtajina/grunt-bump/commit/2fe1e89d78e17e04c07a01139454e6cb5292107a), closes [#126](http://github.com/vojtajina/grunt-bump/issues/126))
+
+
 <a name="0.2.0"></a>
 ## 0.2.0 (2015-02-17)
 
