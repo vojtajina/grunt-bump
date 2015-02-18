@@ -42,6 +42,10 @@ module.exports = function(grunt) {
       prereleaseName: null,
       regExp: null
     });
+    
+    if (opts.type && !versionType) {
+      versionType = opts.type;
+    }
 
     var dryRun = grunt.option('dry-run');
     if (dryRun) {
@@ -62,7 +66,7 @@ module.exports = function(grunt) {
       opts.bumpVersion = false;
     }
 
-    var exactVersionToSet = grunt.option('setversion');
+    var exactVersionToSet = grunt.option('setversion') || opts.version || '';
     if (!semver.valid(exactVersionToSet)) {
       exactVersionToSet = false;
     }
