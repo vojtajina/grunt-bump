@@ -45,9 +45,9 @@ module.exports = function(grunt) {
 
     var dryRun = grunt.option('dry-run');
 
-    var exactVersionToSet = grunt.option('setversion');
-    if (!semver.valid(exactVersionToSet)) {
-      exactVersionToSet = false;
+    var setVersion = grunt.option('setversion');
+    if (!semver.valid(setVersion)) {
+      setVersion = false;
     }
 
     var globalVersion; // when bumping multiple files
@@ -113,7 +113,7 @@ module.exports = function(grunt) {
           VERSION_REGEXP,
           function(match, prefix, parsedVersion, namedPre, noNamePre, suffix) {
             var type = versionType === 'git' ? 'prerelease' : versionType;
-            version = exactVersionToSet || semver.inc(
+            version = setVersion || semver.inc(
               parsedVersion, type || 'patch', gitVersion || opts.prereleaseName
             );
             return prefix + version + suffix;
