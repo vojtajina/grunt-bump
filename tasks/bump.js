@@ -27,23 +27,55 @@ module.exports = function(grunt) {
   grunt.registerTask('bump', DESC, function(versionType, incOrCommitOnly) {
     var opts = this.options({
       bumpVersion: true,
-      files: ['package.json'],
-      updateConfigs: [], // array of config properties to update (with files)
       commit: true,
-      commitMessage: 'Release v%VERSION%',
       commitFiles: ['package.json'], // '-a' for all files
+      commitMessage: 'Release v%VERSION%',
       createTag: true,
-      tagName: 'v%VERSION%',
-      tagMessage: 'Version %VERSION%',
-      push: true,
-      pushTo: 'upstream',
+      files: ['package.json'],
       gitDescribeOptions: '--tags --always --abbrev=1 --dirty=-d',
       globalReplace: false,
       prereleaseName: null,
-      regExp: null
+      push: true,
+      pushTo: 'upstream',
+      regExp: null,
+      tagMessage: 'Version %VERSION%',
+      tagName: 'v%VERSION%',
+      updateConfigs: [] // array of config properties to update (with files)
     });
 
     var dryRun = grunt.option('dry-run');
+
+    var exactVersionToSet = grunt.option('setversion');
+    if (!semver.valid(exactVersionToSet)) {
+      exactVersionToSet = false;
+    }
+
+    var globalVersion; // when bumping multiple files
+    var gitVersion;    // when bumping using `git describe`
+
+    var VERSION_REGEXP = opts.regExp || new RegExp(
+      '([\'|\"]?version[\'|\"]?[ ]*:[ ]*[\'|\"]?)(\\d+\\.\\d+\\.\\d+(-' +
+      opts.prereleaseName +
+      '\\.\\d+)?(-\\d+)?)[\\d||A-a|.|-]*([\'|\"]?)', 'i'
+    );
+    if (opts.globalReplace) {
+      VERSION_REGEXP = new RegExp(VERSION_REGEXP.source, 'gi');
+    }
+
+    var done = this.async();
+    var queue = [];
+    var next = function() {
+      if (!queue.length) {
+        return done();
+      }
+      queue.shift()();
+    };
+    var runIf = function(condition, behavior) {
+      if (condition) {
+        queue.push(behavior);
+      }
+    };
+
     if (dryRun) {
       grunt.log.writeln('Running grunt-bump in dry mode!');
     }
@@ -62,37 +94,6 @@ module.exports = function(grunt) {
       opts.bumpVersion = false;
     }
 
-    var exactVersionToSet = grunt.option('setversion');
-    if (!semver.valid(exactVersionToSet)) {
-      exactVersionToSet = false;
-    }
-
-    var done = this.async();
-    var queue = [];
-    var next = function() {
-      if (!queue.length) {
-        return done();
-      }
-      queue.shift()();
-    };
-    var runIf = function(condition, behavior) {
-      if (condition) {
-        queue.push(behavior);
-      }
-    };
-
-    var globalVersion; // when bumping multiple files
-    var gitVersion;    // when bumping using `git describe`
-    var VERSION_REGEXP = opts.regExp || new RegExp(
-      '([\'|\"]?version[\'|\"]?[ ]*:[ ]*[\'|\"]?)(\\d+\\.\\d+\\.\\d+(-' +
-      opts.prereleaseName +
-      '\\.\\d+)?(-\\d+)?)[\\d||A-a|.|-]*([\'|\"]?)', 'i'
-    );
-
-    if (opts.globalReplace) {
-      VERSION_REGEXP = new RegExp(VERSION_REGEXP.source, 'gi');
-    }
-
     // GET VERSION FROM GIT
     runIf(opts.bumpVersion && versionType === 'git', function() {
       exec('git describe ' + opts.gitDescribeOptions, function(err, stdout) {
@@ -108,13 +109,16 @@ module.exports = function(grunt) {
     runIf(opts.bumpVersion, function() {
       grunt.file.expand(opts.files).forEach(function(file, idx) {
         var version = null;
-        var content = grunt.file.read(file).replace(VERSION_REGEXP, function(match, prefix, parsedVersion, namedPre, noNamePre, suffix) {
-          var type = versionType === 'git' ? 'prerelease' : versionType;
-          version = exactVersionToSet || semver.inc(
-            parsedVersion, type || 'patch', gitVersion || opts.prereleaseName
-          );
-          return prefix + version + suffix;
-        });
+        var content = grunt.file.read(file).replace(
+          VERSION_REGEXP,
+          function(match, prefix, parsedVersion, namedPre, noNamePre, suffix) {
+            var type = versionType === 'git' ? 'prerelease' : versionType;
+            version = exactVersionToSet || semver.inc(
+              parsedVersion, type || 'patch', gitVersion || opts.prereleaseName
+            );
+            return prefix + version + suffix;
+          }
+        );
 
         if (!version) {
           grunt.fatal('Can not find a version to bump in ' + file);
@@ -141,7 +145,9 @@ module.exports = function(grunt) {
 
         var cfg = grunt.config(configProperty);
         if (!cfg) {
-          return grunt.warn('Can not update "' + configProperty + '" config, it does not exist!');
+          return grunt.warn(
+            'Can not update "' + configProperty + '" config, it does not exist!'
+          );
         }
 
         cfg.version = version;
@@ -166,8 +172,11 @@ module.exports = function(grunt) {
 
     // COMMIT
     runIf(opts.commit, function() {
-      var commitMessage = opts.commitMessage.replace('%VERSION%', globalVersion);
-      var cmd = 'git commit ' + opts.commitFiles.join(' ') + ' -m "' + commitMessage + '"';
+      var commitMessage = opts.commitMessage.replace(
+        '%VERSION%', globalVersion
+      );
+      var cmd = 'git commit ' + opts.commitFiles.join(' ');
+      cmd += ' -m "' + commitMessage + '"';
 
       if (dryRun) {
         grunt.log.ok('bump-dry: ' + cmd);
@@ -207,7 +216,8 @@ module.exports = function(grunt) {
 
     // PUSH CHANGES
     runIf(opts.push, function() {
-      var cmd = 'git push ' + opts.pushTo + ' && git push ' + opts.pushTo + ' --tags';
+      var cmd = 'git push ' + opts.pushTo + ' && ';
+      cmd += 'git push ' + opts.pushTo + ' --tags';
       if (dryRun) {
         grunt.log.ok('bump-dry: ' + cmd);
         next();
