@@ -31,6 +31,7 @@ module.exports = function(grunt) {
       commitFiles: ['package.json'], // '-a' for all files
       commitMessage: 'Release v%VERSION%',
       createTag: true,
+      dryRun: false,
       files: ['package.json'],
       gitDescribeOptions: '--tags --always --abbrev=1 --dirty=-d',
       globalReplace: false,
@@ -38,15 +39,18 @@ module.exports = function(grunt) {
       push: true,
       pushTo: 'upstream',
       regExp: false,
+      setVersion: false,
       tagMessage: 'Version %VERSION%',
       tagName: 'v%VERSION%',
-      updateConfigs: [] // array of config properties to update (with files)
+      updateConfigs: [], // array of config properties to update (with files)
+      versionType: false
     });
 
-    var dryRun = grunt.option('dry-run');
+    versionType = versionType || opts.versionType;
+    var dryRun = grunt.option('dry-run') || opts.dryRun;
 
-    var setVersion = grunt.option('setversion');
-    if (!semver.valid(setVersion)) {
+    var setVersion = grunt.option('setversion') || opts.setVersion;
+    if (setVersion && !semver.valid(setVersion)) {
       setVersion = false;
     }
 
