@@ -220,17 +220,19 @@ module.exports = function(grunt) {
 
     // PUSH CHANGES
     runIf(opts.push, function() {
-      var cmd = 'git push ' + opts.pushTo + ' && ';
-      cmd += 'git push ' + opts.pushTo + ' --tags';
+      var pushTo = opts.pushTo.replace('%VERSION%', globalVersion);
+
+      var cmd = 'git push ' + pushTo + ' && ';
+      cmd += 'git push ' + pushTo + ' --tags';
       if (dryRun) {
         grunt.log.ok('bump-dry: ' + cmd);
         next();
       } else {
         exec(cmd, function(err, stdout, stderr) {
           if (err) {
-            grunt.fatal('Can not push to ' + opts.pushTo + ':\n  ' + stderr);
+            grunt.fatal('Can not push to ' + pushTo + ':\n  ' + stderr);
           }
-          grunt.log.ok('Pushed to ' + opts.pushTo);
+          grunt.log.ok('Pushed to ' + pushTo);
           next();
         });
       }
