@@ -35,6 +35,8 @@ module.exports = function(grunt) {
       files: ['package.json'],
       gitDescribeOptions: '--tags --always --abbrev=1 --dirty=-d',
       globalReplace: false,
+      newBranch: false,
+      newBranchName: 'release-%VERSION%',
       prereleaseName: false,
       push: true,
       pushTo: 'upstream',
@@ -53,6 +55,8 @@ module.exports = function(grunt) {
     if (setVersion && !semver.valid(setVersion)) {
       setVersion = false;
     }
+
+    var newBranch = ('undefined' !== typeof grunt.option('newbranch')) ? grunt.option('newbranch') : opts.newBranch;
 
     var globalVersion; // when bumping multiple files
     var gitVersion;    // when bumping using `git describe`
@@ -171,6 +175,28 @@ module.exports = function(grunt) {
       }
 
       next();
+    });
+
+    
+    // NEW BRANCH
+    runIf(newBranch, function() {
+      var newBranchName = opts.newBranchName.replace(
+        '%VERSION%', globalVersion
+      );
+      var cmd = 'git checkout -b ' + newBranchName;
+      
+      if (dryRun) {
+        grunt.log.ok('bump-dry: ' + cmd);
+        next();
+      } else {
+        exec(cmd, function(err, stdout, stderr) {
+          if (err) {
+            grunt.fatal('Can not create the branch:\n ' + stderr);
+          }
+          grunt.log.ok('Created branch "' + newBranchName + '"');
+          next();
+        });
+      }
     });
 
 
