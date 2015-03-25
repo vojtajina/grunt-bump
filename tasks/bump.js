@@ -120,7 +120,7 @@ module.exports = function(grunt) {
             version = setVersion || semver.inc(
               parsedVersion, type || 'patch', gitVersion || opts.prereleaseName
             );
-            return prefix + version + suffix;
+            return prefix + version + (suffix ? suffix : '');
           }
         );
 
