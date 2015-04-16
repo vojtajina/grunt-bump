@@ -82,7 +82,7 @@ If so, what is the commit message ? You can use `%VERSION%` which will get repla
 Type: `Array`
 Default value: `['package.json']`
 
-An array of files that you want to commit. You can use `['-a']` to commit all files.
+An array of files that you want to commit. You can use `['--all']` to commit all files.
 
 #### options.createTag
 Type: `Boolean`

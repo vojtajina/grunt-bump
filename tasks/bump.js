@@ -28,8 +28,9 @@ module.exports = function(grunt) {
     var opts = this.options({
       bumpVersion: true,
       commit: true,
-      commitFiles: ['package.json'], // '-a' for all files
+      commitFiles: ['package.json'], // '--all' for all files
       commitMessage: 'Release v%VERSION%',
+      commitUntrackedFiles: false,
       createTag: true,
       dryRun: false,
       files: ['package.json'],
@@ -179,20 +180,51 @@ module.exports = function(grunt) {
       var commitMessage = opts.commitMessage.replace(
         '%VERSION%', globalVersion
       );
-      var cmd = 'git commit ' + opts.commitFiles.join(' ');
-      cmd += ' -m "' + commitMessage + '"';
+
+      var trackFiles = opts.commitFiles;
+      var addCmd;
+      if (opts.commitUntrackedFiles) {
+        // Convert '-a' to '--all' as git add uses '-A' for shorthand
+        trackFiles[trackFiles.indexOf('-a')] = '--all';
+        addCmd = 'git add ' + trackFiles.join(' ');
+      }
+
+      var commitCmd = 'git commit ' + opts.commitFiles.join(' ');
+      commitCmd += ' -m "' + commitMessage + '"';
 
       if (dryRun) {
-        grunt.log.ok('bump-dry: ' + cmd);
+        if (opts.commitUntrackedFiles) {
+          grunt.log.ok('bump-dry: ' + addCmd);
+        }
+        grunt.log.ok('bump-dry: ' + commitCmd);
         next();
       } else {
-        exec(cmd, function(err, stdout, stderr) {
-          if (err) {
-            grunt.fatal('Can not create the commit:\n  ' + stderr);
-          }
-          grunt.log.ok('Committed as "' + commitMessage + '"');
-          next();
-        });
+        if (opts.commitUntrackedFiles && addCmd) {
+          exec(addCmd, function(err, stdout, stderr) {
+            if (err) {
+              grunt.fatal('Can not stage files for tracking:\n  ' + (stderr || stdout));
+            } else {
+              grunt.log.ok('Staged files for commit: "' + trackFiles + '"');
+              exec(commitCmd, function(err, stdout, stderr) {
+                if (err) {
+                  grunt.fatal('Can not create the commit:\n  ' + (stderr || stdout));
+                } else {
+                  grunt.log.ok('Committed as "' + commitMessage + '"');
+                }
+                next();
+              });
+            }
+          });
+        } else {
+          exec(commitCmd, function(err, stdout, stderr) {
+            if (err) {
+              grunt.fatal('Can not create the commit:\n  ' + (stderr || stdout));
+            } else {
+              grunt.log.ok('Committed as "' + commitMessage + '"');
+            }
+            next();
+          });
+        }
       }
     });
 
