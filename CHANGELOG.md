@@ -1,3 +1,12 @@
+<a name"0.3.1"></a>
+### 0.3.1 (2015-04-23)
+
+
+#### Bug Fixes
+
+* undefined suffix returns undefined ([5e8e187f](https://github.com/vojtajina/grunt-bump/commit/5e8e187f))
+
+
 <a name="0.3.0"></a>
 ## 0.3.0 (2015-02-18)
 
