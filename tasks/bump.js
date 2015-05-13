@@ -220,8 +220,10 @@ module.exports = function(grunt) {
 
     // PUSH CHANGES
     runIf(opts.push, function() {
+      var tagName = opts.tagName.replace('%VERSION%', globalVersion);
+      
       var cmd = 'git push ' + opts.pushTo + ' && ';
-      cmd += 'git push ' + opts.pushTo + ' --tags';
+      cmd += 'git push ' + opts.pushTo + ' ' + tagName;
       if (dryRun) {
         grunt.log.ok('bump-dry: ' + cmd);
         next();
