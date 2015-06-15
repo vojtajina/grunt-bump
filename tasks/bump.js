@@ -37,6 +37,7 @@ module.exports = function(grunt) {
       globalReplace: false,
       prereleaseName: false,
       push: true,
+      pushTagOnly: false,
       pushTo: 'upstream',
       regExp: false,
       setVersion: false,
@@ -222,7 +223,8 @@ module.exports = function(grunt) {
     runIf(opts.push, function() {
       var tagName = opts.tagName.replace('%VERSION%', globalVersion);
 
-      var cmd = 'git push ' + opts.pushTo + ' `git rev-parse --abbrev-ref HEAD` ' +  ' && ';
+      var cmd = "";
+      if (!opts.pushTagOnly) cmd += 'git push ' + opts.pushTo + ' `git rev-parse --abbrev-ref HEAD` ' +  ' && ';
       cmd += 'git push ' + opts.pushTo + ' ' + tagName;
       if (dryRun) {
         grunt.log.ok('bump-dry: ' + cmd);

@@ -33,6 +33,7 @@ grunt.initConfig({
       tagName: 'v%VERSION%',
       tagMessage: 'Version %VERSION%',
       push: true,
+      pushTagOnly: false,
       pushTo: 'upstream',
       gitDescribeOptions: '--tags --always --abbrev=1 --dirty=-d',
       globalReplace: false,
@@ -107,6 +108,12 @@ Type: `Boolean`
 Default value: `true`
 
 Push the changes to a remote repo?
+
+#### options.pushTagOnly
+Type: `Boolean`
+Default value: `false`
+
+Only push the tag and not the branch?
 
 #### options.pushTo
 Type: `String`
