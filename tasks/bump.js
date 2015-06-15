@@ -20,6 +20,7 @@ module.exports = function(grunt) {
       globalReplace: false,
       prereleaseName: false,
       push: true,
+      pushTagOnly: false,
       pushTo: 'upstream',
       regExp: false,
       setVersion: false,
@@ -219,11 +220,18 @@ module.exports = function(grunt) {
           grunt.fatal('Can not get ref for HEAD:\n' + stderr);
         }
 
-        var cmd = 'git push ' + opts.pushTo + ' ' + ref.trim();
-        if (opts.createTag) {
-          var tagName = opts.tagName.replace('%VERSION%', globalVersion);
-          cmd += ' && git push ' + opts.pushTo + ' ' + tagName;
+        var cmd = [];
+
+        if (opts.push === true || opts.push === 'branch') {
+          cmd.push('git push ' + opts.pushTo + ' ' + ref.trim());
         }
+
+        if (opts.createTag && (opts.push === true || opts.push === 'tag')) {
+          var tagName = opts.tagName.replace('%VERSION%', globalVersion);
+          cmd.push('git push ' + opts.pushTo + ' ' + tagName);
+        }
+
+        cmd = cmd.join(' && ');
 
         if (dryRun) {
           grunt.log.ok('bump-dry: ' + cmd);

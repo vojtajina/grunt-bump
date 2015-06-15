@@ -103,10 +103,15 @@ Default value: `Version %VERSION%`
 If `options.createTag` is set to true, then yep, you guessed right, it's the message of that tag - description (`%VERSION%` placeholder is available).
 
 #### options.push
-Type: `Boolean`
+Type: `Boolean` or `String`
 Default value: `true`
 
-Push the changes to a remote repo?
+Push the changes to a remote repo? If `options.push` is set to:
+
+ * `'tag'` (String), only the tag is pushed. The branch is not pushed
+ * `'branch'` (String), only the branch is pushed. The tag is not pushed
+ * `true` (Boolean), both branch and tag are pushed
+ * `false` (Boolean), nothing is pushed
 
 #### options.pushTo
 Type: `String`
