@@ -43,6 +43,7 @@ module.exports = function(grunt) {
       setVersion: false,
       tagMessage: 'Version %VERSION%',
       tagName: 'v%VERSION%',
+      bumpTag: false,
       updateConfigs: [], // array of config properties to update (with files)
       versionType: false
     });
@@ -57,10 +58,12 @@ module.exports = function(grunt) {
 
     var globalVersion; // when bumping multiple files
     var gitVersion;    // when bumping using `git describe`
+    var gitTags;       // when bumping based on `git tag`
 
     var VERSION_REGEXP = opts.regExp || new RegExp(
-      '([\'|\"]?version[\'|\"]?[ ]*:[ ]*[\'|\"]?)(\\d+\\.\\d+\\.\\d+(-' +
-      opts.prereleaseName +
+      '([\'|\"]?version[\'|\"]?[ ]*:[ ]*[\'|\"]?)(' +
+      (opts.bumpTag ? '\\d*(?:\\.\\d+){0,2}' : '\\d+\\.\\d+\\.\\d+') +
+      '(-' + opts.prereleaseName +
       '\\.\\d+)?(-\\d+)?)[\\d||A-a|.|-]*([\'|\"]?)', 'i'
     );
     if (opts.globalReplace) {
@@ -109,6 +112,37 @@ module.exports = function(grunt) {
         next();
       });
     });
+    
+    // GET ALL TAGS FROM GIT
+    runIf(opts.bumpVersion && opts.bumpTag, function() {
+      exec('git tag', function(err, stdout) {
+        if (err) {
+          grunt.fatal('Can not get tags using `git tag`');
+        }
+        gitTags = stdout.trim().split("\n");
+        next();
+      });
+    });
+
+    function bumpFromTag(crit) {
+      var type = versionType === 'git' ? 'prerelease' : (versionType || 'patch');
+      var version = crit ? (crit + '.0.0').split('.').slice(0, 3).join('.') : '0.1.0';
+      var cl = crit.split('.').length;
+      
+      if ((type === 'major' && cl > 1) || (type === 'minor' && cl > 2)) {
+        version = semver.inc(version, type, gitVersion || opts.prereleaseName);
+        if (crit) crit = version.split('.').slice(0, crit.split('.').length).join('.');
+        type = 'patch';
+      }
+
+      gitTags.forEach(function(tag) {
+        if (semver.satisfies(tag, crit) && semver.gte(tag, version)) {
+          version = semver.inc(tag, type, gitVersion || opts.prereleaseName);
+        }
+      });
+
+      return version;
+    }
 
     // BUMP ALL FILES
     runIf(opts.bumpVersion, function() {
@@ -117,10 +151,17 @@ module.exports = function(grunt) {
         var content = grunt.file.read(file).replace(
           VERSION_REGEXP,
           function(match, prefix, parsedVersion, namedPre, noNamePre, suffix) {
-            var type = versionType === 'git' ? 'prerelease' : versionType;
-            version = setVersion || semver.inc(
-              parsedVersion, type || 'patch', gitVersion || opts.prereleaseName
-            );
+            if (setVersion) {
+              version = setVersion;
+            } else if (opts.bumpTag) {
+              version = bumpFromTag(parsedVersion);
+            } else {
+              var type = versionType === 'git' ? 'prerelease' : versionType;
+              version = semver.inc(
+                parsedVersion, type || 'patch', gitVersion || opts.prereleaseName
+              );
+            }
+            
             return prefix + version + (suffix || '');
           }
         );
