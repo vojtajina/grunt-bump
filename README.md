@@ -155,9 +155,9 @@ Regex to find and replace version string in files described in `options.files`. 
 Type: `Boolean`
 Default value: `false`
 
-Bump the version based on git tags rather than relying on the version in `package.json`.
+Check if the bumped version already exists as a git tag. If so, continue bumping until a new version is found.
 
-The version in the package file may contain a full semver version, contain a partial version or be empty. Versions outside of the scope of the version named in the package are ignored. E.g. we're bumbing a patch version for `1.0` than all `v2.x.y` tags are ignored.
+When the version exists for a major version update, an error is given rather than updating to the next major version.
 
 ### Usage Examples
 

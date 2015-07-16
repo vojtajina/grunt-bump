@@ -124,22 +124,21 @@ module.exports = function(grunt) {
       });
     });
 
-    function bumpFromTag(crit) {
-      var type = versionType === 'git' ? 'prerelease' : (versionType || 'patch');
-      var version = crit ? (crit + '.0.0').split('.').slice(0, 3).join('.') : '0.1.0';
-      var cl = crit.split('.').length;
+    function bumpFromTag(parsedVersion) {
+      var type = versionType === 'git' ? 'prerelease' : versionType;
+      var version = parsedVersion;
+      var tagName;
       
-      if ((type === 'major' && cl > 1) || (type === 'minor' && cl > 2)) {
-        version = semver.inc(version, type, gitVersion || opts.prereleaseName);
-        if (crit) crit = version.split('.').slice(0, crit.split('.').length).join('.');
-        type = 'patch';
-      }
-
-      gitTags.forEach(function(tag) {
-        if (semver.satisfies(tag, crit) && semver.gte(tag, version)) {
-          version = semver.inc(tag, type, gitVersion || opts.prereleaseName);
+      do {
+        version = semver.inc(
+          version, type || 'patch', gitVersion || opts.prereleaseName
+        );
+        tagName = opts.tagName.replace('%VERSION%', version);
+        
+        if (type === 'major' && gitTags.indexOf(tagName) >= 0) {
+          grunt.fatal('Bump major version failed: Version ' + version + ' already exists');
         }
-      });
+      } while (gitTags.indexOf(tagName) >= 0);
 
       return version;
     }
