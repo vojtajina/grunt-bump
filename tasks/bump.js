@@ -127,9 +127,9 @@ module.exports = function(grunt) {
     function bumpFromTag(parsedVersion) {
       var type = versionType === 'git' ? 'prerelease' : versionType;
       var version = parsedVersion;
-      var tagName;
+      var tagName = opts.tagName.replace('%VERSION%', version);
       
-      do {
+      while (gitTags.indexOf(tagName) >= 0) {
         version = semver.inc(
           version, type || 'patch', gitVersion || opts.prereleaseName
         );
@@ -138,7 +138,7 @@ module.exports = function(grunt) {
         if (type === 'major' && gitTags.indexOf(tagName) >= 0) {
           grunt.fatal('Bump major version failed: Version ' + version + ' already exists');
         }
-      } while (gitTags.indexOf(tagName) >= 0);
+      }
 
       return version;
     }
