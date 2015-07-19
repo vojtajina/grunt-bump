@@ -229,9 +229,11 @@ module.exports = function(grunt) {
       } else {
         exec(cmd, function(err, stdout, stderr) {
           if (err) {
-            grunt.fatal('Can not create the commit:\n  ' + stderr);
+            if (stderr) grunt.fatal('Can not create the commit:\n  ' + stderr);
+            grunt.log.ok("Nothing to commit");
+          } else {
+            grunt.log.ok('Committed as "' + commitMessage + '"');
           }
-          grunt.log.ok('Committed as "' + commitMessage + '"');
           next();
         });
       }
