@@ -144,6 +144,20 @@ Default value: `false`
 
 Regex to find and replace version string in files described in `options.files`. If no value is specified, it will use the plugin's default.
 
+
+### Exported config variables
+
+#### bump.globalVersion
+Type: `String`
+
+Contains the string of the new global version to be used by later grunt tasks as needed (perhaps for pushing the release into the CDN). 
+
+After the bump task has run: 
+```
+grunt.log.ok("<%= bump.globalVersion %>")
+```
+
+
 ### Usage Examples
 
 Let's say current version is `0.0.1`.

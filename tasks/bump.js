@@ -25,6 +25,7 @@ module.exports = function(grunt) {
 
   var DESC = 'Increment the version, commit, tag and push.';
   grunt.registerTask('bump', DESC, function(versionType, incOrCommitOnly) {
+
     var opts = this.options({
       bumpVersion: true,
       commit: true,
@@ -54,7 +55,6 @@ module.exports = function(grunt) {
       setVersion = false;
     }
 
-    var globalVersion; // when bumping multiple files
     var gitVersion;    // when bumping using `git describe`
 
     var VERSION_REGEXP = opts.regExp || new RegExp(
@@ -128,6 +128,8 @@ module.exports = function(grunt) {
           grunt.fatal('Can not find a version to bump in ' + file);
         }
 
+        grunt.config.set("version", version);
+
         var logMsg = 'Version bumped to ' + version +  ' (in ' + file + ')';
         if (!dryRun) {
           grunt.file.write(file, content);
@@ -136,9 +138,9 @@ module.exports = function(grunt) {
           grunt.log.ok('bump-dry: ' + logMsg);
         }
 
-        if (!globalVersion) {
-          globalVersion = version;
-        } else if (globalVersion !== version) {
+        if (!grunt.config.get("bump.globalVersion")) {
+          grunt.config.set("bump.globalVersion", version);
+        } else if (grunt.config.get("bump.globalVersion") !== version) {
           grunt.warn('Bumping multiple files with different versions!');
         }
 
@@ -165,9 +167,9 @@ module.exports = function(grunt) {
     // when only committing, read the version from package.json / pkg config
     runIf(!opts.bumpVersion, function() {
       if (opts.updateConfigs.length) {
-        globalVersion = grunt.config(opts.updateConfigs[0]).version;
+        grunt.config.set("bump.globalVersion", grunt.config(opts.updateConfigs[0]).version);
       } else {
-        globalVersion = grunt.file.readJSON(opts.files[0]).version;
+        grunt.config.set("bump.globalVersion", grunt.file.readJSON(opts.files[0]).version);
       }
 
       next();
@@ -177,7 +179,7 @@ module.exports = function(grunt) {
     // COMMIT
     runIf(opts.commit, function() {
       var commitMessage = opts.commitMessage.replace(
-        '%VERSION%', globalVersion
+        '%VERSION%', grunt.config.get("bump.globalVersion")
       );
       var cmd = 'git commit ' + opts.commitFiles.join(' ');
       cmd += ' -m "' + commitMessage + '"';
@@ -199,8 +201,8 @@ module.exports = function(grunt) {
 
     // CREATE TAG
     runIf(opts.createTag, function() {
-      var tagName = opts.tagName.replace('%VERSION%', globalVersion);
-      var tagMessage = opts.tagMessage.replace('%VERSION%', globalVersion);
+      var tagName = opts.tagName.replace('%VERSION%', grunt.config.get("bump.globalVersion"));
+      var tagMessage = opts.tagMessage.replace('%VERSION%', grunt.config.get("bump.globalVersion"));
 
       var cmd = 'git tag -a ' + tagName + ' -m "' + tagMessage + '"';
       if (dryRun) {
@@ -220,7 +222,7 @@ module.exports = function(grunt) {
 
     // PUSH CHANGES
     runIf(opts.push, function() {
-      var tagName = opts.tagName.replace('%VERSION%', globalVersion);
+      var tagName = opts.tagName.replace('%VERSION%', grunt.config.get("bump.globalVersion"));
 
       var cmd = 'git push ' + opts.pushTo + ' `git rev-parse --abbrev-ref HEAD` ' +  ' && ';
       cmd += 'git push ' + opts.pushTo + ' ' + tagName;
@@ -240,7 +242,6 @@ module.exports = function(grunt) {
 
     next();
   });
-
 
   // ALIASES
   DESC = 'Increment the version only.';
