@@ -1,3 +1,13 @@
+<a name"0.3.2"></a>
+### 0.3.2 (2015-08-19)
+
+
+#### Bug Fixes
+
+* push the current branch, not all branches ([dc5a90e5](https://github.com/vojtajina/grunt-bump/commit/dc5a90e5))
+* push the new tag, not all tags in repo ([55e0d0b8](https://github.com/vojtajina/grunt-bump/commit/55e0d0b8))
+
+
 <a name"0.3.1"></a>
 ### 0.3.1 (2015-04-23)
 
