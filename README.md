@@ -29,6 +29,7 @@ grunt.initConfig({
       commit: true,
       commitMessage: 'Release v%VERSION%',
       commitFiles: ['package.json'],
+      commitUntrackedFiles: false,
       createTag: true,
       tagName: 'v%VERSION%',
       tagMessage: 'Version %VERSION%',
@@ -82,7 +83,13 @@ If so, what is the commit message ? You can use `%VERSION%` which will get repla
 Type: `Array`
 Default value: `['package.json']`
 
-An array of files that you want to commit. You can use `['-a']` to commit all files.
+An array of files that you want to commit. You can use `['--all']` to commit all files.
+
+#### options.commitUntrackedFiles
+Type: `Boolean`
+Default value: `false`
+
+Should new files be staged before being committed? Useful when creating files, such as changelogs, between the `bump-only` and `bump-commit` processes.
 
 #### options.createTag
 Type: `Boolean`
