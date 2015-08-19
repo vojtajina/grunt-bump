@@ -37,11 +37,13 @@ module.exports = function(grunt) {
       globalReplace: false,
       prereleaseName: false,
       push: true,
+      pushTagOnly: false,
       pushTo: 'upstream',
       regExp: false,
       setVersion: false,
       tagMessage: 'Version %VERSION%',
       tagName: 'v%VERSION%',
+      bumpTag: false,
       updateConfigs: [], // array of config properties to update (with files)
       versionType: false
     });
@@ -56,10 +58,12 @@ module.exports = function(grunt) {
 
     var globalVersion; // when bumping multiple files
     var gitVersion;    // when bumping using `git describe`
+    var gitTags;       // when bumping based on `git tag`
 
     var VERSION_REGEXP = opts.regExp || new RegExp(
-      '([\'|\"]?version[\'|\"]?[ ]*:[ ]*[\'|\"]?)(\\d+\\.\\d+\\.\\d+(-' +
-      opts.prereleaseName +
+      '([\'|\"]?version[\'|\"]?[ ]*:[ ]*[\'|\"]?)(' +
+      (opts.bumpTag ? '\\d*(?:\\.\\d+){0,2}' : '\\d+\\.\\d+\\.\\d+') +
+      '(-' + opts.prereleaseName +
       '\\.\\d+)?(-\\d+)?)[\\d||A-a|.|-]*([\'|\"]?)', 'i'
     );
     if (opts.globalReplace) {
@@ -108,6 +112,36 @@ module.exports = function(grunt) {
         next();
       });
     });
+    
+    // GET ALL TAGS FROM GIT
+    runIf(opts.bumpVersion && opts.bumpTag, function() {
+      exec('git tag', function(err, stdout) {
+        if (err) {
+          grunt.fatal('Can not get tags using `git tag`');
+        }
+        gitTags = stdout.trim().split("\n");
+        next();
+      });
+    });
+
+    function bumpFromTag(parsedVersion) {
+      var type = versionType === 'git' ? 'prerelease' : versionType;
+      var version = parsedVersion;
+      var tagName = opts.tagName.replace('%VERSION%', version);
+      
+      while (gitTags.indexOf(tagName) >= 0) {
+        version = semver.inc(
+          version, type || 'patch', gitVersion || opts.prereleaseName
+        );
+        tagName = opts.tagName.replace('%VERSION%', version);
+        
+        if (type === 'major' && gitTags.indexOf(tagName) >= 0) {
+          grunt.fatal('Bump major version failed: Version ' + version + ' already exists');
+        }
+      }
+
+      return version;
+    }
 
     // BUMP ALL FILES
     runIf(opts.bumpVersion, function() {
@@ -116,10 +150,17 @@ module.exports = function(grunt) {
         var content = grunt.file.read(file).replace(
           VERSION_REGEXP,
           function(match, prefix, parsedVersion, namedPre, noNamePre, suffix) {
-            var type = versionType === 'git' ? 'prerelease' : versionType;
-            version = setVersion || semver.inc(
-              parsedVersion, type || 'patch', gitVersion || opts.prereleaseName
-            );
+            if (setVersion) {
+              version = setVersion;
+            } else if (opts.bumpTag) {
+              version = bumpFromTag(parsedVersion);
+            } else {
+              var type = versionType === 'git' ? 'prerelease' : versionType;
+              version = semver.inc(
+                parsedVersion, type || 'patch', gitVersion || opts.prereleaseName
+              );
+            }
+            
             return prefix + version + (suffix || '');
           }
         );
@@ -222,7 +263,8 @@ module.exports = function(grunt) {
     runIf(opts.push, function() {
       var tagName = opts.tagName.replace('%VERSION%', globalVersion);
 
-      var cmd = 'git push ' + opts.pushTo + ' `git rev-parse --abbrev-ref HEAD` ' +  ' && ';
+      var cmd = "";
+      if (!opts.pushTagOnly) cmd += 'git push ' + opts.pushTo + ' `git rev-parse --abbrev-ref HEAD` ' +  ' && ';
       cmd += 'git push ' + opts.pushTo + ' ' + tagName;
       if (dryRun) {
         grunt.log.ok('bump-dry: ' + cmd);

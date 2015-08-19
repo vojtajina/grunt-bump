@@ -144,6 +144,14 @@ Default value: `false`
 
 Regex to find and replace version string in files described in `options.files`. If no value is specified, it will use the plugin's default.
 
+#### options.bumpTag
+Type: `Boolean`
+Default value: `false`
+
+Check if the bumped version already exists as a git tag. If so, continue bumping until a new version is found.
+
+When the version exists for a major version update, an error is given rather than updating to the next major version.
+
 ### Usage Examples
 
 Let's say current version is `0.0.1`.
