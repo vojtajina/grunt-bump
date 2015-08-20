@@ -33,7 +33,6 @@ grunt.initConfig({
       tagName: 'v%VERSION%',
       tagMessage: 'Version %VERSION%',
       push: true,
-      pushTagOnly: false,
       pushTo: 'upstream',
       gitDescribeOptions: '--tags --always --abbrev=1 --dirty=-d',
       globalReplace: false,
@@ -104,16 +103,10 @@ Default value: `Version %VERSION%`
 If `options.createTag` is set to true, then yep, you guessed right, it's the message of that tag - description (`%VERSION%` placeholder is available).
 
 #### options.push
-Type: `Boolean`
+Type: `Boolean` or `String`
 Default value: `true`
 
-Push the changes to a remote repo?
-
-#### options.pushTagOnly
-Type: `Boolean`
-Default value: `false`
-
-Only push the tag and not the branch?
+Push the changes to a remote repo? If `options.tag` is set to `tag`, only the tag is pushed and not the branch. When set to `branch`, only the branch is pushed. 
 
 #### options.pushTo
 Type: `String`
