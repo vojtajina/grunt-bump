@@ -106,7 +106,7 @@ If `options.createTag` is set to true, then yep, you guessed right, it's the mes
 Type: `Boolean` or `String`
 Default value: `true`
 
-Push the changes to a remote repo? If `options.tag` is set to `tag`, only the tag is pushed and not the branch. When set to `branch`, only the branch is pushed. 
+Push the changes to a remote repo? If `options.push` is set to `tag`, only the tag is pushed and not the branch. If set to `branch`, only the branch is pushed and not the tag. If set to `true`, both branch and tag are pushed. If set to `false`, nothing is pushed. 
 
 #### options.pushTo
 Type: `String`
