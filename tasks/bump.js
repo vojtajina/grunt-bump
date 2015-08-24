@@ -223,8 +223,12 @@ module.exports = function(grunt) {
       var tagName = opts.tagName.replace('%VERSION%', globalVersion);
 
       var cmd = "";
-      if (opts.push !== 'tag') cmd += 'git push ' + opts.pushTo + ' `git rev-parse --abbrev-ref HEAD` ' +  ' && ';
-      if (opts.push !== 'branch') cmd += 'git push ' + opts.pushTo + ' ' + tagName;
+      if (opts.push === true || opts.push === 'branch') {
+        cmd += 'git push ' + opts.pushTo + ' `git rev-parse --abbrev-ref HEAD` ' +  ' && ';
+      }
+      if (opts.push === true || opts.push === 'tag') {
+        cmd += 'git push ' + opts.pushTo + ' ' + tagName
+      };
       if (dryRun) {
         grunt.log.ok('bump-dry: ' + cmd);
         next();
