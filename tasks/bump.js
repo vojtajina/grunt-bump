@@ -33,6 +33,7 @@ module.exports = function(grunt) {
       createTag: true,
       dryRun: false,
       files: ['package.json'],
+      gitCommitOptions: '--no-verify',
       gitDescribeOptions: '--tags --always --abbrev=1 --dirty=-d',
       globalReplace: false,
       prereleaseName: false,
@@ -179,7 +180,7 @@ module.exports = function(grunt) {
       var commitMessage = opts.commitMessage.replace(
         '%VERSION%', globalVersion
       );
-      var cmd = 'git commit ' + opts.commitFiles.join(' ');
+      var cmd = 'git commit ' + opts.gitCommitOptions + ' ' + opts.commitFiles.join(' ');
       cmd += ' -m "' + commitMessage + '"';
 
       if (dryRun) {
