@@ -1,18 +1,3 @@
-/*
- * Increase version number
- *
- * grunt bump
- * grunt bump:git
- * grunt bump:patch
- * grunt bump:minor
- * grunt bump:major
- * grunt bump:prepatch
- * grunt bump:preminor
- * grunt bump:premajor
- * grunt bump:prerelease
- *
- */
-
 'use strict';
 
 var semver = require('semver');
