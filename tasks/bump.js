@@ -28,7 +28,12 @@ module.exports = function(grunt) {
       versionType: false
     });
 
+    if (versionType === 'bump-only' || versionType === 'commit-only') {
+      incOrCommitOnly = versionType;
+      versionType = '';
+    }
     versionType = versionType || opts.versionType;
+
     var dryRun = grunt.option('dry-run') || opts.dryRun;
 
     var setVersion = grunt.option('setversion') || opts.setVersion;
