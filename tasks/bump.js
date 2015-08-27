@@ -202,15 +202,16 @@ module.exports = function(grunt) {
 
     // PUSH CHANGES
     runIf(opts.push, function() {
-      var tagName = opts.tagName.replace('%VERSION%', globalVersion);
-
       exec('git rev-parse --abbrev-ref HEAD', function(err, ref, stderr) {
         if (err) {
           grunt.fatal('Can not get ref for HEAD:\n' + stderr);
         }
 
-        var cmd = 'git push ' + opts.pushTo + ' ' + ref.trim() + ' && ';
-        cmd += 'git push ' + opts.pushTo + ' ' + tagName;
+        var cmd = 'git push ' + opts.pushTo + ' ' + ref.trim();
+        if (opts.createTag) {
+          var tagName = opts.tagName.replace('%VERSION%', globalVersion);
+          cmd += ' && git push ' + opts.pushTo + ' ' + tagName;
+        }
 
         if (dryRun) {
           grunt.log.ok('bump-dry: ' + cmd);
