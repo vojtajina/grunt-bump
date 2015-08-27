@@ -222,20 +222,27 @@ module.exports = function(grunt) {
     runIf(opts.push, function() {
       var tagName = opts.tagName.replace('%VERSION%', globalVersion);
 
-      var cmd = 'git push ' + opts.pushTo + ' `git rev-parse --abbrev-ref HEAD` ' +  ' && ';
-      cmd += 'git push ' + opts.pushTo + ' ' + tagName;
-      if (dryRun) {
-        grunt.log.ok('bump-dry: ' + cmd);
-        next();
-      } else {
-        exec(cmd, function(err, stdout, stderr) {
-          if (err) {
-            grunt.fatal('Can not push to ' + opts.pushTo + ':\n  ' + stderr);
-          }
-          grunt.log.ok('Pushed to ' + opts.pushTo);
+      exec('git rev-parse --abbrev-ref HEAD', function(err, ref, stderr) {
+        if (err) {
+          grunt.fatal('Can not get ref for HEAD:\n' + stderr);
+        }
+
+        var cmd = 'git push ' + opts.pushTo + ' ' + ref + ' && ';
+        cmd += 'git push ' + opts.pushTo + ' ' + tagName;
+
+        if (dryRun) {
+          grunt.log.ok('bump-dry: ' + cmd);
           next();
-        });
-      }
+        } else {
+          exec(cmd, function(err, stdout, stderr) {
+            if (err) {
+              grunt.fatal('Can not push to ' + opts.pushTo + ':\n  ' + stderr);
+            }
+            grunt.log.ok('Pushed to ' + opts.pushTo);
+            next();
+          });
+        }
+      });
     });
 
     next();
