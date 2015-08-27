@@ -1,3 +1,12 @@
+<a name"0.3.4"></a>
+### 0.3.4 (2015-08-27)
+
+
+#### Bug Fixes
+
+* trim the response from 1st exec ([ea350459](https://github.com/vojtajina/grunt-bump/commit/ea350459))
+
+
 <a name"0.3.3"></a>
 ### 0.3.3 (2015-08-27)
 
