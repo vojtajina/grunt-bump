@@ -1,3 +1,12 @@
+<a name"0.3.3"></a>
+### 0.3.3 (2015-08-27)
+
+
+#### Bug Fixes
+
+* avoid using subshell during push for windows ([c819c002](https://github.com/vojtajina/grunt-bump/commit/c819c002))
+
+
 <a name"0.3.2"></a>
 ### 0.3.2 (2015-08-19)
 
