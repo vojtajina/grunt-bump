@@ -11,9 +11,6 @@
  * grunt bump:premajor
  * grunt bump:prerelease
  *
- * @author Vojta Jina <vojta.jina@gmail.com>
- * @author Mathias Paumgarten <mail@mathias-paumgarten.com>
- * @author Adam Biggs <email@adambig.gs>
  */
 
 'use strict';
