@@ -227,7 +227,7 @@ module.exports = function(grunt) {
           grunt.fatal('Can not get ref for HEAD:\n' + stderr);
         }
 
-        var cmd = 'git push ' + opts.pushTo + ' ' + ref + ' && ';
+        var cmd = 'git push ' + opts.pushTo + ' ' + ref.trim() + ' && ';
         cmd += 'git push ' + opts.pushTo + ' ' + tagName;
 
         if (dryRun) {
