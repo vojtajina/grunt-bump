@@ -57,6 +57,7 @@ module.exports = function(grunt) {
     var queue = [];
     var next = function() {
       if (!queue.length) {
+        grunt.config.set('bump.version', globalVersion);
         return done();
       }
       queue.shift()();
