@@ -1,3 +1,19 @@
+<a name"0.4.0"></a>
+## 0.4.0 (2015-08-27)
+
+
+#### Bug Fixes
+
+* get exported version for bump-only ([f6c9d8ad](https://github.com/vojtajina/grunt-bump/commit/f6c9d8ad), closes [#145](https://github.com/vojtajina/grunt-bump/issues/145))
+* correct bump tasks runner ([04905e76](https://github.com/vojtajina/grunt-bump/commit/04905e76))
+* only push tag if createTag is true ([58e20333](https://github.com/vojtajina/grunt-bump/commit/58e20333), closes [#157](https://github.com/vojtajina/grunt-bump/issues/157))
+
+
+#### Features
+
+* export bump version ([cb86bdd1](https://github.com/vojtajina/grunt-bump/commit/cb86bdd1), closes [#151](https://github.com/vojtajina/grunt-bump/issues/151))
+
+
 <a name"0.3.4"></a>
 ### 0.3.4 (2015-08-27)
 
