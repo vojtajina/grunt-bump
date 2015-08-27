@@ -1,3 +1,13 @@
+<a name"0.5.0"></a>
+## 0.5.0 (2015-08-27)
+
+
+#### Features
+
+* option to push tag and/or branch only ([0c8ab2c2](https://github.com/vojtajina/grunt-bump/commit/0c8ab2c2), closes [#147](https://github.com/vojtajina/grunt-bump/issues/147))
+* allow git commit options ([0fab670d](https://github.com/vojtajina/grunt-bump/commit/0fab670d), closes [#156](https://github.com/vojtajina/grunt-bump/issues/156))
+
+
 <a name"0.4.0"></a>
 ## 0.4.0 (2015-08-27)
 
