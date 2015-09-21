@@ -214,12 +214,34 @@ module.exports = function(grunt) {
 
     // PUSH CHANGES
     runIf(opts.push, function() {
+      var cmd;
+
+      if (opts.push === 'git' && !opts.pushTo) {
+        cmd = 'git push';
+        if (dryRun) {
+          grunt.log.ok('bump-dry: ' + cmd);
+          next();
+        } else {
+          exec(cmd, function(err, stdout, stderr) {
+            if (err) {
+              grunt.fatal(
+                'Can not push to the git default settings:\n ' + stderr
+              );
+            }
+            grunt.log.ok('Pushed to the git default settings');
+            next();
+          });
+        }
+
+        return;
+      }
+
       exec('git rev-parse --abbrev-ref HEAD', function(err, ref, stderr) {
         if (err) {
           grunt.fatal('Can not get ref for HEAD:\n' + stderr);
         }
 
-        var cmd = [];
+        cmd = [];
 
         if (opts.push === true || opts.push === 'branch') {
           cmd.push('git push ' + opts.pushTo + ' ' + ref.trim());

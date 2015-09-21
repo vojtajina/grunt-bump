@@ -113,6 +113,8 @@ Push the changes to a remote repo? If `options.push` is set to:
  * `true` (Boolean), both branch and tag are pushed
  * `false` (Boolean), nothing is pushed
 
+If `options.push` is set to `git` and `options.pushTo` is set to a falsey value (or empty string), then it will be up to git to decide what to push. This will be the same as running `git push` with no other options. Be careful with this as it is not explicit what will happen.
+
 #### options.pushTo
 Type: `String`
 Default value: `upstream`
