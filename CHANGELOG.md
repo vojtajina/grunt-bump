@@ -1,3 +1,12 @@
+<a name"0.6.0"></a>
+## 0.6.0 (2015-09-21)
+
+
+#### Features
+
+* allow to push to git defaults ([2140be23](https://github.com/vojtajina/grunt-bump/commit/2140be23))
+
+
 <a name"0.5.0"></a>
 ## 0.5.0 (2015-08-27)
 
