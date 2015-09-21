@@ -20,7 +20,6 @@ module.exports = function(grunt) {
       globalReplace: false,
       prereleaseName: false,
       push: true,
-      pushTagOnly: false,
       pushTo: 'upstream',
       regExp: false,
       setVersion: false,
