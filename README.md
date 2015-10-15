@@ -46,13 +46,13 @@ grunt.initConfig({
 ### Options
 
 #### options.files
-Type: `Array`
+Type: `Array`  
 Default value: `['package.json']`
 
 Maybe you wanna bump 'component.json' instead? Or maybe both: `['package.json', 'component.json']`? Can be either a list of files to bump (an array of files) or a grunt glob (e.g., `['*.json']`).
 
 #### options.updateConfigs
-Type: `Array`
+Type: `Array`  
 Default value: `[]`
 
 Sometimes you load the content of `package.json` into a grunt config. This will update the config property, so that even tasks running in the same grunt process see the updated value.
@@ -67,43 +67,43 @@ bump: {
 ```
 
 #### options.commit
-Type: `Boolean`
+Type: `Boolean`  
 Default value: `true`
 
 Should the changes be committed? False if you want to do additional things.
 
 #### options.commitMessage
-Type: `String`
+Type: `String`  
 Default value: `Release v%VERSION%`
 
 If so, what is the commit message ? You can use `%VERSION%` which will get replaced with the new version.
 
 #### options.commitFiles
-Type: `Array`
+Type: `Array`  
 Default value: `['package.json']`
 
 An array of files that you want to commit. You can use `['-a']` to commit all files.
 
 #### options.createTag
-Type: `Boolean`
+Type: `Boolean`  
 Default value: `true`
 
 Create a Git tag?
 
 #### options.tagName
-Type: `String`
+Type: `String`  
 Default value: `v%VERSION%`
 
 If `options.createTag` is set to true, then this is the name of that tag (`%VERSION%` placeholder is available).
 
 #### options.tagMessage
-Type: `String`
+Type: `String`  
 Default value: `Version %VERSION%`
 
 If `options.createTag` is set to true, then yep, you guessed right, it's the message of that tag - description (`%VERSION%` placeholder is available).
 
 #### options.push
-Type: `Boolean` or `String`
+Type: `Boolean` or `String`  
 Default value: `true`
 
 Push the changes to a remote repo? If `options.push` is set to:
@@ -116,25 +116,25 @@ Push the changes to a remote repo? If `options.push` is set to:
 If `options.push` is set to `git` and `options.pushTo` is set to a falsey value (or empty string), then it will be up to git to decide what to push. This will be the same as running `git push` with no other options. Be careful with this as it is not explicit what will happen.
 
 #### options.pushTo
-Type: `String`
+Type: `String`  
 Default value: `upstream`
 
 If `options.push` is set to a truthy value, which remote repo should it go to? This is what gets set as `remote` in the `git push {remote} {branch}` command. Use `git remote` to see the list of remote repo's you have listed. [Learn about remote repos](http://git-scm.com/book/en/v2/Git-Basics-Working-with-Remotes)
 
 #### options.gitDescribeOptions
-Type: `String`
+Type: `String`  
 Default value: `--tags --always --abbrev=1 --dirty=-d`
 
 Options to use with `$ git describe`
 
 #### options.globalReplace
-Type: `Boolean`
+Type: `Boolean`  
 Default value: `false`
 
 Replace all occurrences of the version in the file. When set to `false`, only the first occurrence will be replaced.
 
 #### options.prereleaseName
-Type: `String`
+Type: `String`  
 Default value: `rc`
 
 When bumping to a prerelease version this will be the identifier of the prerelease e.g. `dev`, `alpha`, `beta`, `rc` etc.
@@ -146,7 +146,7 @@ When left as the default `false` version bump:prereleae will behave as follows:
   * 1.0.0-7-g10b5 to 1.0.0-8
 
 #### options.regExp
-Type: `RegExp`
+Type: `RegExp`  
 Default value: `false`
 
 Regex to find and replace version string in files described in `options.files`. If no value is specified, it will use the plugin's default.
@@ -260,6 +260,7 @@ $ grunt bump-commit
 ```
 
 If you want to try out your settings, you can use any of the above commands with the ```dry-run``` tag in the command line.
+
 With this tag specified there will be no changes, stages, commits or pushes.
 
 ```bash
