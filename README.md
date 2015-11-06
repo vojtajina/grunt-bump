@@ -147,7 +147,7 @@ When left as the default `false` version bump:prereleae will behave as follows:
   * 1.0.0-7-g10b5 to 1.0.0-8
   
 #### options.metadata
-Type: `Array` or `String`
+Type: `Array` or `String` 
 Default value: `[]`
 
 Allows optional metadata to be added as either a alphanumeric string or as an array of strings joined by a '.'.  This metadata is added to the end of the file preceded by a '+' per the semver spec.
