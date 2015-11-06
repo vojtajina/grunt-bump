@@ -19,6 +19,7 @@ module.exports = function(grunt) {
       gitDescribeOptions: '--tags --always --abbrev=1 --dirty=-d',
       globalReplace: false,
       prereleaseName: false,
+      metadata: '',
       push: true,
       pushTo: 'upstream',
       regExp: false,
@@ -109,6 +110,16 @@ module.exports = function(grunt) {
             version = setVersion || semver.inc(
               parsedVersion, type || 'patch', gitVersion || opts.prereleaseName
             );
+            console.log('md', opts.metadata);
+            if (opts.metadata) {
+              if (!/^([0-9a-zA-Z-]+\.{0,1})*$/.test(opts.metadata)) {
+                grunt.fatal(
+                  'Metadata can only contain letters, numbers, dashes ' +
+                  '(-) and dots (.)'
+                );
+              }
+              version += '+' + opts.metadata;
+            }
             return prefix + version + (suffix || '');
           }
         );

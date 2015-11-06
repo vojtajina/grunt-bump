@@ -37,6 +37,7 @@ grunt.initConfig({
       gitDescribeOptions: '--tags --always --abbrev=1 --dirty=-d',
       globalReplace: false,
       prereleaseName: false,
+      metadata: '',
       regExp: false
     }
   },
@@ -144,6 +145,12 @@ When left as the default `false` version bump:prereleae will behave as follows:
 * 1.0.1-0 to 1.0.1-1
 * from a previous bump:git
   * 1.0.0-7-g10b5 to 1.0.0-8
+
+#### options.metadata
+Type: `String`  
+Default value: `''`
+
+Allows optional metadata (suffix) for the version number. It is joined to the version with a `+`. This will accept any alphanumeric string, dots (`.`) and dashes (`-`) per the semver spec.
 
 #### options.regExp
 Type: `RegExp`  
