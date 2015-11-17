@@ -19,6 +19,7 @@ module.exports = function(grunt) {
       gitDescribeOptions: '--tags --always --abbrev=1 --dirty=-d',
       globalReplace: false,
       prereleaseName: false,
+      metadata: '',
       push: true,
       pushTo: 'upstream',
       regExp: false,
@@ -105,10 +106,19 @@ module.exports = function(grunt) {
         var content = grunt.file.read(file).replace(
           VERSION_REGEXP,
           function(match, prefix, parsedVersion, namedPre, noNamePre, suffix) {
+            var metadata = '';
             var type = versionType === 'git' ? 'prerelease' : versionType;
+            if(opts.metadata) {
+              if(/^([0-9a-zA-Z-]+\.{0,1})*$/.test(opts.metadata)) {
+                metadata = '+' + opts.metadata;
+              } else {
+                grunt.fatal('Metadata can only contain letters, numbers, and dashes (-) connected by a dot (.)');
+              }
+            }
             version = setVersion || semver.inc(
               parsedVersion, type || 'patch', gitVersion || opts.prereleaseName
             );
+            version += metadata;
             return prefix + version + (suffix || '');
           }
         );
