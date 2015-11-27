@@ -101,62 +101,81 @@ module.exports = function(grunt) {
 
     // BUMP ALL FILES
     runIf(opts.bumpVersion, function() {
-      grunt.file.expand(opts.files).forEach(function(file, idx) {
-        var version = null;
-        var content = grunt.file.read(file).replace(
-          VERSION_REGEXP,
-          function(match, prefix, parsedVersion, namedPre, noNamePre, suffix) {
-            var type = versionType === 'git' ? 'prerelease' : versionType;
-            version = setVersion || semver.inc(
-              parsedVersion, type || 'patch', gitVersion || opts.prereleaseName
-            );
-            console.log('md', opts.metadata);
-            if (opts.metadata) {
-              if (!/^([0-9a-zA-Z-]+\.{0,1})*$/.test(opts.metadata)) {
-                grunt.fatal(
-                  'Metadata can only contain letters, numbers, dashes ' +
-                  '(-) and dots (.)'
-                );
-              }
-              version += '+' + opts.metadata;
-            }
-            return prefix + version + (suffix || '');
-          }
-        );
+      opts.files.forEach(function(fileconf,idx) {
 
-        if (!version) {
-          grunt.fatal('Can not find a version to bump in ' + file);
-        }
+        var regexp = VERSION_REGEXP;
+        var files = "";
 
-        var logMsg = 'Version bumped to ' + version +  ' (in ' + file + ')';
-        if (!dryRun) {
-          grunt.file.write(file, content);
-          grunt.log.ok(logMsg);
+        if (!fileconf.path) {
+          //old notation
+          files = fileconf;
+          regexp = VERSION_REGEXP;
         } else {
-          grunt.log.ok('bump-dry: ' + logMsg);
+          //new notation
+          files = fileconf.path;
+          regexp = fileconf.regexp || VERSION_REGEXP;
         }
 
-        if (!globalVersion) {
-          globalVersion = version;
-        } else if (globalVersion !== version) {
-          grunt.warn('Bumping multiple files with different versions!');
-        }
+        grunt.file.expand(files).forEach(function (file, idx) {
+          var version = null;
+          var content = grunt.file.read(file).replace(regexp,
+            function (match, prefix, parsedVersion, namedPre, noNamePre, suffix) {
+              //console.log("param debug", match,prefix, parsedVersion, namedPre, noNamePre, suffix);
+              var type = versionType === 'git' ? 'prerelease' : versionType;
 
-        var configProperty = opts.updateConfigs[idx];
-        if (!configProperty) {
-          return;
-        }
-
-        var cfg = grunt.config(configProperty);
-        if (!cfg) {
-          return grunt.warn(
-            'Can not update "' + configProperty + '" config, it does not exist!'
+              version = setVersion || semver.inc(
+                      parsedVersion, type || 'patch', gitVersion || opts.prereleaseName
+                  );
+              if (opts.metadata) {
+                console.log('md', opts.metadata);
+              }
+              if (opts.metadata) {
+                if (!/^([0-9a-zA-Z-]+\.{0,1})*$/.test(opts.metadata)) {
+                  grunt.fatal(
+                      'Metadata can only contain letters, numbers, dashes ' +
+                      '(-) and dots (.)'
+                  );
+                }
+                version += '+' + opts.metadata;
+              }
+              return prefix + version + (suffix || '');
+            }
           );
-        }
 
-        cfg.version = version;
-        grunt.config(configProperty, cfg);
-        grunt.log.ok(configProperty + '\'s version updated');
+          if (!version) {
+            grunt.fatal('Can not find a version to bump in ' + file);
+          }
+
+          var logMsg = 'Version bumped to ' + version + ' (in ' + file + ')';
+          if (!dryRun) {
+            grunt.file.write(file, content);
+            grunt.log.ok(logMsg);
+          } else {
+            grunt.log.ok('bump-dry: ' + logMsg);
+          }
+
+          if (!globalVersion) {
+            globalVersion = version;
+          } else if (globalVersion !== version) {
+            grunt.warn('Bumping multiple files with different versions!');
+          }
+
+          var configProperty = opts.updateConfigs[idx];
+          if (!configProperty) {
+            return;
+          }
+
+          var cfg = grunt.config(configProperty);
+          if (!cfg) {
+            return grunt.warn(
+                'Can not update "' + configProperty + '" config, it does not exist!'
+            );
+          }
+
+          cfg.version = version;
+          grunt.config(configProperty, cfg);
+          grunt.log.ok(configProperty + '\'s version updated');
+        });
       });
       next();
     });
