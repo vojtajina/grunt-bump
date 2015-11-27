@@ -44,6 +44,40 @@ grunt.initConfig({
 })
 ```
 
+Alternatively, you can use different regexes to your target files:
+
+```js
+grunt.initConfig({
+  bump: {
+    options: {
+      files: [
+        {
+          path: 'index.html',
+          regexp: /(dist\/\w+\/\w+[-])(([\d-]+\.)+[\d]+)(([.\w]+['"]))/g
+        },
+        {
+          path: ['package.json', 'bower.json']
+        }
+      ],
+      updateConfigs: [],
+      commit: true,
+      commitMessage: 'Release v%VERSION%',
+      commitFiles: ['package.json'],
+      createTag: true,
+      tagName: 'v%VERSION%',
+      tagMessage: 'Version %VERSION%',
+      push: true,
+      pushTo: 'upstream',
+      gitDescribeOptions: '--tags --always --abbrev=1 --dirty=-d',
+      globalReplace: false,
+      prereleaseName: false,
+      metadata: '',
+      regExp: false
+    }
+  },
+})
+```
+
 ### Options
 
 #### options.files
