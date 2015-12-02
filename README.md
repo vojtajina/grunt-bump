@@ -44,40 +44,6 @@ grunt.initConfig({
 })
 ```
 
-Alternatively, you can use different regexes to your target files:
-
-```js
-grunt.initConfig({
-  bump: {
-    options: {
-      files: [
-        {
-          path: 'index.html',
-          regexp: /(dist\/\w+\/\w+[-])(([\d-]+\.)+[\d]+)(([.\w]+['"]))/g
-        },
-        {
-          path: ['package.json', 'bower.json']
-        }
-      ],
-      updateConfigs: [],
-      commit: true,
-      commitMessage: 'Release v%VERSION%',
-      commitFiles: ['package.json'],
-      createTag: true,
-      tagName: 'v%VERSION%',
-      tagMessage: 'Version %VERSION%',
-      push: true,
-      pushTo: 'upstream',
-      gitDescribeOptions: '--tags --always --abbrev=1 --dirty=-d',
-      globalReplace: false,
-      prereleaseName: false,
-      metadata: '',
-      regExp: false
-    }
-  },
-})
-```
-
 ### Options
 
 #### options.files
@@ -85,6 +51,21 @@ Type: `Array`
 Default value: `['package.json']`
 
 Maybe you wanna bump 'component.json' instead? Or maybe both: `['package.json', 'component.json']`? Can be either a list of files to bump (an array of files) or a grunt glob (e.g., `['*.json']`).
+
+Alternatively, you can use different regexes to your target files:
+
+```js
+files: [
+  {
+    path: 'index.html',
+    regexp: /(dist\/\w+\/\w+[-])(([\d-]+\.)+[\d]+)(([.\w]+['"]))/g
+  },
+  {
+    path: ['package.json', 'bower.json']
+  }
+]
+```
+The example above replaces urls like `dist/js/app-1.0.1.js` or `dist/css/style-1.0.1.css`
 
 #### options.updateConfigs
 Type: `Array`  
