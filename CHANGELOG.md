@@ -1,3 +1,12 @@
+<a name"0.7.0"></a>
+## 0.7.0 (2015-12-10)
+
+
+#### Features
+
+* add semver metadata option ([b5c513bb](https://github.com/vojtajina/grunt-bump/commit/b5c513bb), closes [#167](https://github.com/vojtajina/grunt-bump/issues/167))
+
+
 <a name"0.6.0"></a>
 ## 0.6.0 (2015-09-21)
 
