@@ -18,6 +18,7 @@ module.exports = function(grunt) {
       gitCommitOptions: '',
       gitDescribeOptions: '--tags --always --abbrev=1 --dirty=-d',
       globalReplace: false,
+      hgTagTemplate: '{latesttag}',
       prereleaseName: false,
       metadata: '',
       push: true,
@@ -27,6 +28,7 @@ module.exports = function(grunt) {
       tagMessage: 'Version %VERSION%',
       tagName: 'v%VERSION%',
       updateConfigs: [], // array of config properties to update (with files)
+      vcs: 'git',
       versionType: false
     });
 
@@ -45,6 +47,7 @@ module.exports = function(grunt) {
 
     var globalVersion; // when bumping multiple files
     var gitVersion;    // when bumping using `git describe`
+    var vcs = (opts.vcs === 'hg' ? 'hg' : 'git');
 
     var VERSION_REGEXP = opts.regExp || new RegExp(
       '([\'|\"]?version[\'|\"]?[ ]*:[ ]*[\'|\"]?)(\\d+\\.\\d+\\.\\d+(-' +
@@ -88,16 +91,29 @@ module.exports = function(grunt) {
       opts.bumpVersion = false;
     }
 
-    // GET VERSION FROM GIT
-    runIf(opts.bumpVersion && versionType === 'git', function() {
-      exec('git describe ' + opts.gitDescribeOptions, function(err, stdout) {
-        if (err) {
-          grunt.fatal('Can not get a version number using `git describe`');
-        }
-        gitVersion = stdout.trim();
-        next();
+    // GET VERSION FROM HG OR GIT
+    if (opts.vcs === 'hg') {
+      runIf(opts.bumpVersion && versionType === 'hg', function() {
+        exec("hg parents --template " + opts.hgTagTemplate, function(err, stdout) {//-{latesttagdistance}-{node|short}
+          if (err) {
+            grunt.fatal('Cannot get a version number using `hg parents`');
+          }
+          gitVersion = stdout.trim();
+          grunt.log.writeln("gitVersion = " + gitVersion);
+          next();
+        });
       });
-    });
+    } else {
+      runIf(opts.bumpVersion && versionType === 'git', function() {
+        exec('git describe ' + opts.gitDescribeOptions, function(err, stdout) {
+          if (err) {
+            grunt.fatal('Can not get a version number using `git describe`');
+          }
+          gitVersion = stdout.trim();
+          next();
+        });
+      });
+    }
 
     // BUMP ALL FILES
     runIf(opts.bumpVersion, function() {
@@ -106,7 +122,7 @@ module.exports = function(grunt) {
         var content = grunt.file.read(file).replace(
           VERSION_REGEXP,
           function(match, prefix, parsedVersion, namedPre, noNamePre, suffix) {
-            var type = versionType === 'git' ? 'prerelease' : versionType;
+            var type = (versionType === 'git' || versionType === 'hg') ? 'prerelease' : versionType;
             version = setVersion || semver.inc(
               parsedVersion, type || 'patch', gitVersion || opts.prereleaseName
             );
@@ -184,7 +200,7 @@ module.exports = function(grunt) {
       var commitMessage = opts.commitMessage.replace(
         '%VERSION%', globalVersion
       );
-      var cmd = 'git commit ' + opts.gitCommitOptions + ' ' + opts.commitFiles.join(' ');
+      var cmd = vcs + ' commit ' + opts.gitCommitOptions + ' ' + opts.commitFiles.join(' ');
       cmd += ' -m "' + commitMessage + '"';
 
       if (dryRun) {
@@ -207,7 +223,12 @@ module.exports = function(grunt) {
       var tagName = opts.tagName.replace('%VERSION%', globalVersion);
       var tagMessage = opts.tagMessage.replace('%VERSION%', globalVersion);
 
-      var cmd = 'git tag -a ' + tagName + ' -m "' + tagMessage + '"';
+      var cmd = '';
+      if (vcs === 'hg') {
+        cmd = 'hg tag -m "' + tagMessage + '" ' + tagName;
+      } else {
+        cmd = 'git tag -a ' + tagName + ' -m "' + tagMessage + '"';
+      }
       if (dryRun) {
         grunt.log.ok('bump-dry: ' + cmd);
         next();
@@ -227,8 +248,8 @@ module.exports = function(grunt) {
     runIf(opts.push, function() {
       var cmd;
 
-      if (opts.push === 'git' && !opts.pushTo) {
-        cmd = 'git push';
+      if (opts.push === vcs && !opts.pushTo) {
+        cmd = vcs + ' push';
         if (dryRun) {
           grunt.log.ok('bump-dry: ' + cmd);
           next();
@@ -236,10 +257,10 @@ module.exports = function(grunt) {
           exec(cmd, function(err, stdout, stderr) {
             if (err) {
               grunt.fatal(
-                'Can not push to the git default settings:\n ' + stderr
+                'Can not push to the ' + vcs + ' default settings:\n ' + stderr
               );
             }
-            grunt.log.ok('Pushed to the git default settings');
+            grunt.log.ok('Pushed to the ' + vcs + ' default settings');
             next();
           });
         }
@@ -247,20 +268,28 @@ module.exports = function(grunt) {
         return;
       }
 
-      exec('git rev-parse --abbrev-ref HEAD', function(err, ref, stderr) {
+      var refCmd = 'git rev-parse --abbrev-ref HEAD';
+      if (vcs === 'hg') {
+        refCmd = 'hg branch';
+      }
+      exec(refCmd, function(err, ref, stderr) {
         if (err) {
           grunt.fatal('Can not get ref for HEAD:\n' + stderr);
         }
 
         cmd = [];
 
-        if (opts.push === true || opts.push === 'branch') {
-          cmd.push('git push ' + opts.pushTo + ' ' + ref.trim());
-        }
+        if (opts.vcs === 'hg') {
+          cmd.push('hg push');
+        } else {
+          if (opts.push === true || opts.push === 'branch') {
+            cmd.push('git push ' + opts.pushTo + ' ' + ref.trim());
+          }
 
-        if (opts.createTag && (opts.push === true || opts.push === 'tag')) {
-          var tagName = opts.tagName.replace('%VERSION%', globalVersion);
-          cmd.push('git push ' + opts.pushTo + ' ' + tagName);
+          if (opts.createTag && (opts.push === true || opts.push === 'tag')) {
+            var tagName = opts.tagName.replace('%VERSION%', globalVersion);
+            cmd.push('git push ' + opts.pushTo + ' ' + tagName);
+          }
         }
 
         cmd = cmd.join(' && ');
