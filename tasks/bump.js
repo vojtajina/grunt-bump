@@ -112,14 +112,16 @@ module.exports = function(grunt) {
         next();
       });
     });
-    
+
     // GET ALL TAGS FROM GIT
     runIf(opts.bumpVersion && opts.bumpTag, function() {
       exec('git tag', function(err, stdout) {
         if (err) {
           grunt.fatal('Can not get tags using `git tag`');
         }
-        gitTags = stdout.trim().split("\n");
+        gitTags = stdout.trim().split("\n").filter(function(tag) {
+          return tag.lastIndexOf('v1', 0) !== -1;
+        });
         next();
       });
     });
@@ -128,13 +130,13 @@ module.exports = function(grunt) {
       var type = versionType === 'git' ? 'prerelease' : versionType;
       var version = parsedVersion;
       var tagName = opts.tagName.replace('%VERSION%', version);
-      
+
       while (gitTags.indexOf(tagName) >= 0) {
         version = semver.inc(
           version, type || 'patch', gitVersion || opts.prereleaseName
         );
         tagName = opts.tagName.replace('%VERSION%', version);
-        
+
         if (type === 'major' && gitTags.indexOf(tagName) >= 0) {
           grunt.fatal('Bump major version failed: Version ' + version + ' already exists');
         }
@@ -160,7 +162,7 @@ module.exports = function(grunt) {
                 parsedVersion, type || 'patch', gitVersion || opts.prereleaseName
               );
             }
-            
+
             return prefix + version + (suffix || '');
           }
         );
