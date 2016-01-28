@@ -119,8 +119,10 @@ module.exports = function(grunt) {
         if (err) {
           grunt.fatal('Can not get tags using `git tag`');
         }
+        var packageVersion = grunt.file.readJSON(opts.files[0]).version;
+        // Limit tags obtained through Git to versions in the minor of patch range of the `package.json`
         gitTags = stdout.trim().split("\n").filter(function(tag) {
-          return tag.lastIndexOf('v1', 0) !== -1;
+          return tag.lastIndexOf('v' + packageVersion.split('.').slice(0, (versionType === 'minor' ? -2 : -1)).join('.') + '.', 0) !== -1;
         });
         next();
       });
