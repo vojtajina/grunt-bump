@@ -110,7 +110,6 @@ module.exports = function(grunt) {
             version = setVersion || semver.inc(
               parsedVersion, type || 'patch', gitVersion || opts.prereleaseName
             );
-            console.log('md', opts.metadata);
             if (opts.metadata) {
               if (!/^([0-9a-zA-Z-]+\.{0,1})*$/.test(opts.metadata)) {
                 grunt.fatal(
