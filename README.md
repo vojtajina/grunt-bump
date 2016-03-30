@@ -229,7 +229,7 @@ $ grunt bump
 >> Tagged as "v1.1.0"
 >> Pushed to origin
 
-$ grunt bump:premajor (with prerelaseName set to 'rc' in options)
+$ grunt bump:premajor (with prereleaseName set to 'rc' in options)
 >> Version bumped to 2.0.0-rc.0
 >> Committed as "Release v2.0.0-rc.0"
 >> Tagged as "v2.0.0-rc.0"
