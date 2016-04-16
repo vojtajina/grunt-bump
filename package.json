@@ -55,20 +55,20 @@
   },
   "license": "MIT",
   "dependencies": {
-    "semver": "^4.3.3"
+    "semver": "^5.1.0"
   },
   "peerDependencies": {
-    "grunt": ">=0.4.0"
+    "grunt": ">=1.0.1"
   },
   "devDependencies": {
-    "grunt": "^0.4.0",
+    "grunt": "^1.0.1",
     "grunt-auto-release": "^0.0.6",
-    "grunt-contrib-clean": "^0.6.0",
-    "grunt-contrib-jshint": "^0.11.0",
-    "grunt-contrib-nodeunit": "^0.4.0",
-    "grunt-conventional-changelog": "^1.2.0",
+    "grunt-contrib-clean": "^1.0.0",
+    "grunt-contrib-jshint": "^1.0.0",
+    "grunt-contrib-nodeunit": "^1.0.0",
+    "grunt-conventional-changelog": "^6.1.0",
     "grunt-npm": "^0.0.2",
-    "load-grunt-tasks": "^3.1.0"
+    "load-grunt-tasks": "^3.5.0"
   },
   "keywords": [
     "gruntplugin"
