@@ -51,7 +51,10 @@
     "node": ">= 0.8.0"
   },
   "scripts": {
-    "test": "grunt nodeunit"
+    "test": "grunt nodeunit",
+    "bump-major": "grunt bump:major",
+    "bump-minor": "grunt bump:minor",
+    "bump-patch": "grunt bump:patch"
   },
   "license": "MIT",
   "dependencies": {
