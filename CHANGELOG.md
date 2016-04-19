@@ -1,6 +1,9 @@
 <a name"0.8.0"></a>
 ## 0.8.0 (2016-04-19)
 
+#### Breaking Changes
+
+* Grunt >= 1.0.0 is now required.
 
 <a name"0.7.2"></a>
 ### 0.7.2 (2016-04-16)
