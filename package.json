@@ -62,9 +62,6 @@
   "dependencies": {
     "semver": "^5.1.0"
   },
-  "peerDependencies": {
-    "grunt": ">=1.0.1"
-  },
   "devDependencies": {
     "grunt": "^1.0.1",
     "grunt-auto-release": "^0.0.6",
