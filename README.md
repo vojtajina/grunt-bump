@@ -169,7 +169,7 @@ Default value: `''`
 Allows optional metadata (suffix) for the version number. It is joined to the version with a `+`. This will accept any alphanumeric string, dots (`.`) and dashes (`-`) per the semver spec.
 
 #### options.regExp
-Type: `RegExp`  
+Type: `Function` or `RegExp`
 Default value: `false`
 
 Regex to find and replace version string in files described in `options.files`. If no value is specified, it will use the plugin's default.
