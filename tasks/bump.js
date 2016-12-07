@@ -20,6 +20,8 @@ module.exports = function(grunt) {
       globalReplace: false,
       prereleaseName: false,
       metadata: '',
+      pull: true,
+      pullAutoCommit: false,
       push: true,
       pushTo: 'upstream',
       regExp: false,
@@ -87,6 +89,28 @@ module.exports = function(grunt) {
 
       opts.bumpVersion = false;
     }
+
+
+    // PULL
+    runIf(opts.pull, function() {
+      var cmd = 'git pull ';
+      cmd += opts.pullAutoCommit ? '--no-edit ' : '--no-commit ';
+      cmd += opts.pushTo || '';
+
+      if (dryRun) {
+        grunt.log.ok('bump-dry: ' + cmd);
+        next();
+      } else {
+        exec(cmd, function(err, stdout, stderr) {
+          if (err) {
+            grunt.fatal('Could not pull from remote:\n ' + stdout + '\n' + stderr);
+          }
+          grunt.log.ok('Pulled from ' + (opts.pushTo || 'remote'));
+          next();
+        });
+      }
+    });
+
 
     // GET VERSION FROM GIT
     runIf(opts.bumpVersion && versionType === 'git', function() {

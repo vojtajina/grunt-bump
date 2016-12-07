@@ -32,6 +32,8 @@ grunt.initConfig({
       createTag: true,
       tagName: 'v%VERSION%',
       tagMessage: 'Version %VERSION%',
+      pull: true,
+      pullAutoCommit: false,
       push: true,
       pushTo: 'upstream',
       gitDescribeOptions: '--tags --always --abbrev=1 --dirty=-d',
@@ -103,6 +105,21 @@ Default value: `Version %VERSION%`
 
 If `options.createTag` is set to true, then yep, you guessed right, it's the message of that tag - description (`%VERSION%` placeholder is available).
 
+#### options.pull
+Type: `Boolean`
+Default value: `true`
+
+Pull changes from remote before pushing.
+If `options.pushTo` is defined the pull is performed from this remote.
+
+#### options.pullAutoCommit
+Type: `Boolean`
+Default value: `false`
+
+If `options.pull` is true, remote changes get pulled but not merged/committed by default.
+Set `options.pullAutoCommit` to true, if you want git to perform a merge with a auto-generated message.
+If `options.pullAutoCommit` is false and `options.commit` is true, you might get an error while performing the commit.
+
 #### options.push
 Type: `Boolean` or `String`  
 Default value: `true`
@@ -164,84 +181,98 @@ Let's say current version is `0.0.1`.
 
 ```bash
 $ grunt bump
+>> Pulled from origin
 >> Version bumped to 0.0.2
 >> Committed as "Release v0.0.2"
 >> Tagged as "v0.0.2"
 >> Pushed to origin
 
 $ grunt bump:patch
+>> Pulled from origin
 >> Version bumped to 0.0.3
 >> Committed as "Release v0.0.3"
 >> Tagged as "v0.0.3"
 >> Pushed to origin
 
 $ grunt bump:minor
+>> Pulled from origin
 >> Version bumped to 0.1.0
 >> Committed as "Release v0.1.0"
 >> Tagged as "v0.1.0"
 >> Pushed to origin
 
 $ grunt bump:major
+>> Pulled from origin
 >> Version bumped to 1.0.0
 >> Committed as "Release v1.0.0"
 >> Tagged as "v1.0.0"
 >> Pushed to origin
 
 $ grunt bump:patch
+>> Pulled from origin
 >> Version bumped to 1.0.1
 >> Committed as "Release v1.0.1"
 >> Tagged as "v1.0.1"
 >> Pushed to origin
 
 $ grunt bump:git
+>> Pulled from origin
 >> Version bumped to 1.0.1-ge96c
 >> Committed as "Release v1.0.1-ge96c"
 >> Tagged as "v1.0.1-ge96c"
 >> Pushed to origin
 
 $ grunt bump:prepatch
+>> Pulled from origin
 >> Version bumped to 1.0.2-0
 >> Committed as "Release v1.0.2-0"
 >> Tagged as "v1.0.2-0"
 >> Pushed to origin
 
 $ grunt bump:prerelease
+>> Pulled from origin
 >> Version bumped to 1.0.2-1
 >> Committed as "Release v1.0.2-1"
 >> Tagged as "v1.0.2-1"
 >> Pushed to origin
 
 $ grunt bump:patch # (major, minor or patch) will do this
+>> Pulled from origin
 >> Version bumped to 1.0.2
 >> Committed as "Release v1.0.2"
 >> Tagged as "v1.0.2"
 >> Pushed to origin
 
 $ grunt bump:preminor
+>> Pulled from origin
 >> Version bumped to 1.1.0-0
 >> Committed as "Release v1.1.0-0"
 >> Tagged as "v1.1.0-0"
 >> Pushed to origin
 
 $ grunt bump
+>> Pulled from origin
 >> Version bumped to 1.1.0
 >> Committed as "Release v1.1.0"
 >> Tagged as "v1.1.0"
 >> Pushed to origin
 
 $ grunt bump:premajor (with prereleaseName set to 'rc' in options)
+>> Pulled from origin
 >> Version bumped to 2.0.0-rc.0
 >> Committed as "Release v2.0.0-rc.0"
 >> Tagged as "v2.0.0-rc.0"
 >> Pushed to origin
 
 $ grunt bump
+>> Pulled from origin
 >> Version bumped to 2.0.0
 >> Committed as "Release v2.0.0"
 >> Tagged as "v2.0.0"
 >> Pushed to origin
 
 $ grunt bump:prerelease  # from a released version `prerelease` defaults to prepatch
+>> Pulled from origin
 >> Version bumped to 2.0.1-rc.0
 >> Committed as "Release v2.0.1-rc.0"
 >> Tagged as "v2.0.1-rc.0"
@@ -252,6 +283,7 @@ If you want to jump to an exact version, you can use the ```setversion``` tag in
 
 ```bash
 $ grunt bump --setversion=2.0.1
+>> Pulled from origin
 >> Version bumped to 2.0.1
 >> Committed as "Release v2.0.1"
 >> Tagged as "v2.0.1"
@@ -274,6 +306,7 @@ With this tag specified there will be no changes, stages, commits or pushes.
 $ grunt bump --dry-run
 Running "bump" task
 Running grunt-bump in dry mode!
+>> bump-dry: git pull --no-commit origin
 >> bump-dry: Version bumped to 1.0.1 (in package.json)
 >> bump-dry: git commit package.json -m "Release v1.0.1"
 >> bump-dry: git tag -a v1.0.1 -m "Version 1.0.1"
