@@ -2,6 +2,22 @@
 
 > Bump package version, create tag, commit, push ...
 
+## Badges
+
+[![NPM](https://nodei.co/npm/grunt-bump.png?downloads=true&downloadRank=true)](https://nodei.co/npm/grunt-bump/)
+
+[![Dependency Status](https://david-dm.org/vojtajina/grunt-bump/status.svg)](https://david-dm.org/vojtajina/grunt-bump)
+[![devDependency Status](https://david-dm.org/vojtajina/grunt-bump/dev-status.svg)](https://david-dm.org/vojtajina/grunt-bump?type=dev)
+
+[![GitHub stars](https://img.shields.io/github/stars/vojtajina/grunt-bump.svg)](https://github.com/vojtajina/grunt-bump/stargazers)
+[![GitHub contributors](https://img.shields.io/github/contributors/vojtajina/grunt-bump.svg)](https://github.com/vojtajina/grunt-bump/graphs/contributors)
+[![Pending Pull-Requests](http://githubbadges.herokuapp.com/vojtajina/grunt-bump/pulls.svg)](https://github.com/vojtajina/grunt-bump/pulls)
+
+[![GitHub issues](https://img.shields.io/github/issues/vojtajina/grunt-bump.svg)](https://github.com/vojtajina/grunt-bump/issues)
+[![Percentage of issues still open](http://isitmaintained.com/badge/open/vojtajina/grunt-bump.svg)](http://isitmaintained.com/project/vojtajina/grunt-bump "Percentage of issues still open")
+[![Average time to resolve an issue](http://isitmaintained.com/badge/resolution/vojtajina/grunt-bump.svg)](http://isitmaintained.com/project/vojtajina/grunt-bump "Average time to resolve an issue")
+
+
 ## Getting Started
 This plugin requires Grunt.
 
