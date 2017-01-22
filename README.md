@@ -40,6 +40,7 @@ In your project's Gruntfile, add a section named `bump` to the data object passe
 grunt.initConfig({
   bump: {
     options: {
+      cwd: '.',
       files: ['package.json'],
       updateConfigs: [],
       commit: true,
@@ -62,11 +63,18 @@ grunt.initConfig({
 
 ### Options
 
+#### options.cwd
+Type: `String`  
+Default value: `.`
+
+It is possible to define a custom working directory (cwd). All operations get executed in this directory. All `options.files` entries are relative to this directory.
+
+
 #### options.files
 Type: `Array`  
 Default value: `['package.json']`
 
-Maybe you wanna bump 'component.json' instead? Or maybe both: `['package.json', 'component.json']`? Can be either a list of files to bump (an array of files) or a grunt glob (e.g., `['*.json']`).
+Maybe you wanna bump 'component.json' instead? Or maybe both: `['package.json', 'component.json']`? Can be either a list of files to bump (an array of files) or a grunt glob (e.g., `['*.json']`). All paths are relative to the `options.cwd` directory.
 
 #### options.updateConfigs
 Type: `Array`  

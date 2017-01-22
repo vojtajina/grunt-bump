@@ -1,5 +1,7 @@
 'use strict';
 
+var fs = require('fs');
+var path = require('path');
 var semver = require('semver');
 var exec = require('child_process').exec;
 
@@ -8,6 +10,7 @@ module.exports = function(grunt) {
   var DESC = 'Increment the version, commit, tag and push.';
   grunt.registerTask('bump', DESC, function(versionType, incOrCommitOnly) {
     var opts = this.options({
+      cwd: '.',
       bumpVersion: true,
       commit: true,
       commitFiles: ['package.json'], // '-a' for all files
@@ -29,6 +32,24 @@ module.exports = function(grunt) {
       updateConfigs: [], // array of config properties to update (with files)
       versionType: false
     });
+
+    // check if cwd exists
+    if (!fs.existsSync(opts.cwd)) {
+      grunt.fatal('The "cwd" requested does not exist');
+    }
+
+    // set cwd as the working directory for exec
+    var execOpts = {
+      cwd: path.resolve(opts.cwd)
+    };
+
+    // set grunts default working directory
+    var originalCwd;
+    if (opts.cwd != '.') {
+      originalCwd = process.cwd();
+      grunt.verbose.writeln('Changing working directory: ' + opts.cwd);
+      grunt.file.setBase(opts.cwd);
+    }
 
     if (versionType === 'bump-only' || versionType === 'commit-only') {
       incOrCommitOnly = versionType;
@@ -60,6 +81,11 @@ module.exports = function(grunt) {
     var next = function() {
       if (!queue.length) {
         grunt.config.set('bump.version', globalVersion);
+
+        // reset original cwd
+        if (originalCwd) {
+          grunt.file.setBase(originalCwd);
+        }
         return done();
       }
       queue.shift()();
@@ -90,7 +116,7 @@ module.exports = function(grunt) {
 
     // GET VERSION FROM GIT
     runIf(opts.bumpVersion && versionType === 'git', function() {
-      exec('git describe ' + opts.gitDescribeOptions, function(err, stdout) {
+      exec('git describe ' + opts.gitDescribeOptions, execOpts, function(err, stdout) {
         if (err) {
           grunt.fatal('Can not get a version number using `git describe`');
         }
@@ -190,8 +216,10 @@ module.exports = function(grunt) {
         grunt.log.ok('bump-dry: ' + cmd);
         next();
       } else {
-        exec(cmd, function(err, stdout, stderr) {
+        exec(cmd, execOpts, function(err, stdout, stderr) {
           if (err) {
+            grunt.verbose.error(err);
+            grunt.verbose.error(stdout);
             grunt.fatal('Can not create the commit:\n  ' + stderr);
           }
           grunt.log.ok('Committed as "' + commitMessage + '"');
@@ -211,7 +239,7 @@ module.exports = function(grunt) {
         grunt.log.ok('bump-dry: ' + cmd);
         next();
       } else {
-        exec(cmd , function(err, stdout, stderr) {
+        exec(cmd , execOpts, function(err, stdout, stderr) {
           if (err) {
             grunt.fatal('Can not create the tag:\n  ' + stderr);
           }
@@ -232,7 +260,7 @@ module.exports = function(grunt) {
           grunt.log.ok('bump-dry: ' + cmd);
           next();
         } else {
-          exec(cmd, function(err, stdout, stderr) {
+          exec(cmd, execOpts, function(err, stdout, stderr) {
             if (err) {
               grunt.fatal(
                 'Can not push to the git default settings:\n ' + stderr
@@ -246,7 +274,7 @@ module.exports = function(grunt) {
         return;
       }
 
-      exec('git rev-parse --abbrev-ref HEAD', function(err, ref, stderr) {
+      exec('git rev-parse --abbrev-ref HEAD', execOpts, function(err, ref, stderr) {
         if (err) {
           grunt.fatal('Can not get ref for HEAD:\n' + stderr);
         }
@@ -268,7 +296,7 @@ module.exports = function(grunt) {
           grunt.log.ok('bump-dry: ' + cmd);
           next();
         } else {
-          exec(cmd, function(err, stdout, stderr) {
+          exec(cmd, execOpts, function(err, stdout, stderr) {
             if (err) {
               grunt.fatal('Can not push to ' + opts.pushTo + ':\n  ' + stderr);
             }
