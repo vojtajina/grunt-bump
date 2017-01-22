@@ -67,11 +67,11 @@
   },
   "devDependencies": {
     "grunt": "^1.0.1",
-    "grunt-auto-release": "^0.0.6",
+    "grunt-auto-release": "^0.0.7",
     "grunt-contrib-clean": "^1.0.0",
     "grunt-contrib-jshint": "^1.0.0",
     "grunt-contrib-nodeunit": "^1.0.0",
-    "grunt-conventional-changelog": "^1.2.0",
+    "grunt-conventional-changelog": "^6.1.0",
     "grunt-npm": "^0.0.2",
     "load-grunt-tasks": "^3.5.0"
   },
