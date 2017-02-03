@@ -17,6 +17,8 @@ module.exports = function(grunt) {
       files: ['package.json'],
       gitCommitOptions: '',
       gitDescribeOptions: '--tags --always --abbrev=1 --dirty=-d',
+      gitPushOptions: '',
+      gitPushTagOptions: '',
       globalReplace: false,
       prereleaseName: false,
       metadata: '',
@@ -227,7 +229,7 @@ module.exports = function(grunt) {
       var cmd;
 
       if (opts.push === 'git' && !opts.pushTo) {
-        cmd = 'git push';
+        cmd = 'git push ' + opts.gitPushOptions;
         if (dryRun) {
           grunt.log.ok('bump-dry: ' + cmd);
           next();
@@ -254,12 +256,12 @@ module.exports = function(grunt) {
         cmd = [];
 
         if (opts.push === true || opts.push === 'branch') {
-          cmd.push('git push ' + opts.pushTo + ' ' + ref.trim());
+          cmd.push('git push ' + opts.pushTo + ' ' + ref.trim() + ' ' + opts.gitPushOptions);
         }
 
         if (opts.createTag && (opts.push === true || opts.push === 'tag')) {
           var tagName = opts.tagName.replace('%VERSION%', globalVersion);
-          cmd.push('git push ' + opts.pushTo + ' ' + tagName);
+          cmd.push('git push ' + opts.pushTo + ' ' + tagName + ' ' + opts.gitPushTagOptions);
         }
 
         cmd = cmd.join(' && ');
