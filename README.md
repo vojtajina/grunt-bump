@@ -52,9 +52,11 @@ grunt.initConfig({
       pushTo: 'upstream',
       gitDescribeOptions: '--tags --always --abbrev=1 --dirty=-d',
       globalReplace: false,
+      hgTagTemplate: '{latesttag}',
       prereleaseName: false,
       metadata: '',
-      regExp: false
+      regExp: false,
+      vcs: 'git'
     }
   },
 })
@@ -173,6 +175,18 @@ Type: `RegExp`
 Default value: `false`
 
 Regex to find and replace version string in files described in `options.files`. If no value is specified, it will use the plugin's default.
+
+#### options.vcs
+Type: `String`
+Default value: `git`
+
+The version control system to use; either `git` or `hg`. If no value is specified, it will use the plugin's default.
+
+#### options.hgTagTemplate
+Type: `String`
+Default value: `{latesttag}`
+
+The template for getting the parent when using hg as the version control system. If no value is specified, it will use the plugin's default.
 
 ### Usage Examples
 
