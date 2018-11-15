@@ -46,7 +46,7 @@ module.exports = function(grunt) {
     var globalVersion; // when bumping multiple files
     var gitVersion;    // when bumping using `git describe`
 
-    var VERSION_REGEXP = (typeof(opts.regExp) == 'function') ? opts.regExp(opts.prereleaseName) : opts.regExp || new RegExp(
+    var VERSION_REGEXP = (typeof opts.regExp === 'function') ? opts.regExp(opts.prereleaseName) : opts.regExp || new RegExp(
       '([\'|\"]?version[\'|\"]?[ ]*:[ ]*[\'|\"]?)(\\d+\\.\\d+\\.\\d+(-' +
       opts.prereleaseName +
       '\\.\\d+)?(-\\d+)?)[\\d||A-a|.|-]*([\'|\"]?)', 'i'
