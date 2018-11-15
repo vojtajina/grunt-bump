@@ -50,6 +50,8 @@ grunt.initConfig({
       tagMessage: 'Version %VERSION%',
       push: true,
       pushTo: 'upstream',
+      gitPushOptions: '',
+      gitPushTagOptions: '',
       gitDescribeOptions: '--tags --always --abbrev=1 --dirty=-d',
       globalReplace: false,
       prereleaseName: false,
@@ -137,6 +139,18 @@ Type: `String`
 Default value: `upstream`
 
 If `options.push` is set to a truthy value, which remote repo should it go to? This is what gets set as `remote` in the `git push {remote} {branch}` command. Use `git remote` to see the list of remote repo's you have listed. [Learn about remote repos](http://git-scm.com/book/en/v2/Git-Basics-Working-with-Remotes)
+
+#### options.gitPushOptions
+Type: `String`
+Default value: ``
+
+Options to use with `$ git push`
+
+#### options.gitPushTagOptions
+Type: `String`
+Default value: ``
+
+Options to use with `$ git push vx.y.z`
 
 #### options.gitDescribeOptions
 Type: `String`  
